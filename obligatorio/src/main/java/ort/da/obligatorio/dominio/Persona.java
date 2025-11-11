@@ -42,4 +42,5 @@ public abstract class Persona {
     public boolean validarCredenciales() {
         return true;
     }
+
 }
