@@ -4,10 +4,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/holamundo")
-public class HolaMundoController {
+@RequestMapping("/personas")
+public class ControladorPersonas {
+
     @GetMapping("/saludar")
     public String saludar() {
-        return "¡Hola Mundo con Spring Boot!";
+        return "Controlador Personas";
     }
+    
 }
