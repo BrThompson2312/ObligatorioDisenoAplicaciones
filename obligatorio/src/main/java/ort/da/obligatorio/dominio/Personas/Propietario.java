@@ -1,9 +1,6 @@
-package ort.da.obligatorio.dominio;
-
-// Libraries
+package ort.da.obligatorio.dominio.Personas;
+import ort.da.obligatorio.dominio.Bonificaciones.AsignacionDeBonificacion;
 import java.util.List;
-
-// Dominio
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 
 public class Propietario extends Persona implements EstadoPropietario {
@@ -16,6 +13,13 @@ public class Propietario extends Persona implements EstadoPropietario {
     private List<Notificacion> listNotificacions;
     private boolean puedeLogin;
     private boolean puedeTransitar;
+
+    public Propietario(String nombre, String apellido, String cedula, double saldoActual, double saldoMinimo, EstadoPropietario estado) {
+        super(nombre, apellido, cedula);
+        this.saldoActual = saldoActual;
+        this.saldoMinimo = saldoMinimo;
+        this.estado = estado;
+    }
 
     public double getSaldoActual() {
         return saldoActual;

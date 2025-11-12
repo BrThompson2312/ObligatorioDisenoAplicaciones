@@ -1,6 +1,8 @@
-package ort.da.obligatorio.dominio;
+package ort.da.obligatorio.dominio.Puestos;
 
 import java.util.List;
+
+import ort.da.obligatorio.dominio.Personas.Propietario;
 
 public class Puesto {
     
@@ -8,6 +10,12 @@ public class Puesto {
     private String direccion;
     private List<Transito> listTransito;
     private List<Tarifa> listTarifas;
+    public Transito transito;
+
+    public Puesto(String nombre, String direccion) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+    }
 
     public List<Transito> getTransitos() {
         return null;
@@ -18,7 +26,11 @@ public class Puesto {
     }
 
     public void agregarTransito(Transito t) {
+        listTransito.add(t);
+    }
 
+    public Propietario getPropietario() {
+        return transito.getPropietario();
     }
     
 }

@@ -1,14 +1,15 @@
-package ort.da.obligatorio.dominio;
+package ort.da.obligatorio.dominio.Personas;
 
 public abstract class Persona {
     
-    private int id;
     private String ci;
     private String password;
     private String nombre;
 
-    public int getId() {
-        return id;
+    public Persona(String ci, String password, String nombre) {
+        this.ci = ci;
+        this.password = password;
+        this.nombre = nombre;
     }
 
     public String getCi() {
@@ -21,10 +22,6 @@ public abstract class Persona {
 
     public String getNombre() {
         return nombre;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void setCi(String ci) {

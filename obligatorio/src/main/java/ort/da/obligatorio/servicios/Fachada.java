@@ -1,22 +1,32 @@
 package ort.da.obligatorio.servicios;
 
 import java.util.List;
-import  ort.da.obligatorio.dominio.Persona;
-import ort.da.obligatorio.dominio.Puesto;
+
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 import ort.da.obligatorio.dominio.interfaces.EstrategiaBonificacion;
+import ort.da.obligatorio.dominio.Sesion;
+import ort.da.obligatorio.dominio.Personas.Persona;
+import ort.da.obligatorio.dominio.Puestos.Puesto;
 
 public class Fachada {
     
     private Fachada instance;
+    private ServicioPersonas sPersonas;
+    private ServicioPuestos sPuestos;
 
-    private Fachada() {}
+    private Fachada() {
+        sPersonas = new ServicioPersonas();
+        sPuestos = new ServicioPuestos();
+    }
 
     public Fachada getInstancia() {
         if (instance == null) {
             return new Fachada();
         } 
         return instance;
+    }
+    public List<Sesion> getSesiones() {
+        return sPersonas.getSesiones();
     }
 
     public void precarga() {}
@@ -34,7 +44,7 @@ public class Fachada {
     }
 
     public void loginPropietario(String ci, String c, List<Persona> propietarios) {
-
+        
     }
 
     public void asignarBonificacion(List<EstrategiaBonificacion> listBonificaciones, List<Puesto> listPuestos) {

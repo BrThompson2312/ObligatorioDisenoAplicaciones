@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ort.da.obligatorio.dominio.Persona;
-import ort.da.obligatorio.dominio.Propietario;
+import ort.da.obligatorio.dominio.Personas.Persona;
+import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 
 @RestController

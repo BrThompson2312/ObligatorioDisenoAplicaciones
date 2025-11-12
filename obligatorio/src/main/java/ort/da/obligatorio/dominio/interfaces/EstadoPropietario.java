@@ -1,9 +1,8 @@
 package ort.da.obligatorio.dominio.interfaces;
 
-// Dominio
-import ort.da.obligatorio.dominio.Propietario;
-import ort.da.obligatorio.dominio.AsignacionDeBonificacion;
-import ort.da.obligatorio.dominio.Notificacion;
+import ort.da.obligatorio.dominio.Bonificaciones.AsignacionDeBonificacion;
+import ort.da.obligatorio.dominio.Personas.Notificacion;
+import ort.da.obligatorio.dominio.Personas.Propietario;
 
 public interface EstadoPropietario {
 
@@ -14,4 +13,5 @@ public interface EstadoPropietario {
     void agregarBonificacion(Propietario p, AsignacionDeBonificacion ab);
 
     String registraTransito();
+    
 }
