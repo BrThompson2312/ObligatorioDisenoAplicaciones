@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Propietario</title>
+    <link rel="stylesheet" href="peaje.css">
+    <script src="vistaWeb.js"></script>
+</head>
+<body class="bg-pink">
+    <script src="utilesVista.js"></script>
+    <div class="container">
+        <h1>Panel de Propietario</h1>
+        <p class="subtitle">Bienvenido al sistema 🚗</p>
+        
+        <div class="button-container">
+            <button class="login-btn owner-btn" onclick="logout()">
+                <span class="icon">🚪</span>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            submit("acceso/logoutPropietario", null)    
+        }
+        function mostrar_usuarioNoAutenticado(urlDestino){
+			window.location.href = urlDestino;
+		}
+    </script>
+</body>
+</html>

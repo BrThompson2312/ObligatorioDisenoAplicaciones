@@ -25,7 +25,7 @@ public abstract class EstadoPropietarioAbstracto implements EstadoPropietario {
     }
 
     public void puedeLogin(Propietario p) {
-        
+        p.setPuedeLogin(true);
     }
 
     public String registraTransito() {

@@ -5,20 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Administrador</title>
     <link rel="stylesheet" href="peaje.css">
+    <script src="vistaWeb.js"></script>
 </head>
 <body class="bg-purple">
+    <script src="utilesVista.js"></script>
     <div class="container">
         <h1>Administrador</h1>
         <p class="subtitle">Ingresa tus credenciales</p>
         
-        <form class="login-form" onsubmit="submitAdminLogin(event)">
+        <form id="login-form" class="login-form" onsubmit="submitAdminLogin(event)">
             <div class="input-group">
-                <label for="adminUser">Usuario</label>
-                <input type="text" id="adminUser" placeholder="Ingresa tu usuario" required>
+                <label for="adminCi">Cédula</label>
+                <input type="text" id="adminCi" name="cedula" placeholder="Ingresa tu cedula" required>
             </div>
             <div class="input-group">
                 <label for="adminPass">Contraseña</label>
-                <input type="password" id="adminPass" placeholder="Ingresa tu contraseña" required>
+                <input type="password" id="adminPass" name="password" placeholder="Ingresa tu contraseña" required>
             </div>
             <button type="submit" class="login-btn admin-btn submit-btn">
                 <span class="icon">🤖</span>
@@ -34,11 +36,19 @@
     <script>
         function submitAdminLogin(event) {
             event.preventDefault();
-            const user = document.getElementById('adminUser').value;
-            const pass = document.getElementById('adminPass').value;
-            alert(`Login Administrador\nUsuario: ${user}`);
-            // Aquí puedes agregar la lógica de autenticación
-            // window.location.href = 'dashboard-admin.html';
+            submit("acceso/loginAdministrador", serializarFormulario("login-form"));
+        }
+        
+        async function mostrar_error(mensaje) {
+            await mostrarMensaje(mensaje);
+        }
+
+        function mostrar_loginExitoso(urlDestino) {
+            window.location.href = urlDestino;
+        }
+
+        async function excepcionDeAplicacion(text){
+            await mostrarMensaje(text);
         }
     </script>
 </body>

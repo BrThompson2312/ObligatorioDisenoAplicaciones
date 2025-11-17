@@ -13,15 +13,6 @@ import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 @RequestMapping("/personas")
 public class ControladorPersonas {
 
-    @GetMapping("/loginAdmin")
-    public boolean loginAdmin(String ci, String c, List<Persona> personas) {
-        return false;
-    }
-
-    @GetMapping("/loginPropietario")
-    public void loginPropietario(String ci, String c, List<Persona> personas) {
-    }
-
     @GetMapping("/buscarPersona")
     public Persona buscarPersona(String ci, boolean esAdmin, List<Persona> personas) {
         return null;
@@ -33,10 +24,6 @@ public class ControladorPersonas {
 
     @GetMapping("/asignarBonificacion")
     public void asignarBonificacion() {
-    }
-
-    @GetMapping("/cambiarEstado")
-    public void cambiarEstado(List<Persona> propietarios, List<EstadoPropietario> estadoPropietario) {
     }
 
     @GetMapping("/cambiarEstado")

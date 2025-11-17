@@ -12,10 +12,6 @@ public class Habilitado extends EstadoPropietarioAbstracto {
         return null;
     }
     @Override
-    public void puedeLogin(Propietario p) {
-        
-    }
-    @Override
     public void agregarNotificacion(Propietario p, Notificacion n) {
     
     }

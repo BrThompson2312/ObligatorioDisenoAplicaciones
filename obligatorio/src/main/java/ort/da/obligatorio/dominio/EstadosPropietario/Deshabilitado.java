@@ -13,7 +13,7 @@ public class Deshabilitado extends EstadoPropietarioAbstracto {
     }
     @Override
     public void puedeLogin(Propietario p) {
-        
+        p.setPuedeLogin(false);
     }
     @Override
     public void agregarNotificacion(Propietario p, Notificacion n) {

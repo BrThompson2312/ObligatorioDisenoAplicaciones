@@ -12,13 +12,15 @@ public class Propietario extends Persona implements EstadoPropietario {
     private List<AsignacionDeBonificacion> listBonificaciones;
     private List<Notificacion> listNotificacions;
     private boolean puedeLogin;
-    private boolean puedeTransitar;
+    private boolean puedeTransitar ;
 
-    public Propietario(String nombre, String apellido, String cedula, double saldoActual, double saldoMinimo, EstadoPropietario estado) {
-        super(nombre, apellido, cedula);
+    public Propietario(String ci, String password, String nombre, double saldoActual, double saldoMinimo, EstadoPropietario estado) {
+        super(ci, password, nombre);
         this.saldoActual = saldoActual;
         this.saldoMinimo = saldoMinimo;
         this.estado = estado;
+        estado.puedeLogin(this);
+        //estado.registraTransito(this);
     }
 
     public double getSaldoActual() {
@@ -29,11 +31,11 @@ public class Propietario extends Persona implements EstadoPropietario {
         return saldoMinimo;
     }
 
-    public boolean isPuedeLogin() {
+    public boolean PuedeLogin() {
         return puedeLogin;
     }
 
-    public boolean isPuedeTransitar() {
+    public boolean PuedeTransitar() {
         return puedeTransitar;
     }
 

@@ -7,10 +7,11 @@ import ort.da.obligatorio.dominio.interfaces.EstrategiaBonificacion;
 import ort.da.obligatorio.dominio.Sesion;
 import ort.da.obligatorio.dominio.Personas.Persona;
 import ort.da.obligatorio.dominio.Puestos.Puesto;
+import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 
 public class Fachada {
     
-    private Fachada instance;
+    private static Fachada instance;
     private ServicioPersonas sPersonas;
     private ServicioPuestos sPuestos;
 
@@ -19,12 +20,13 @@ public class Fachada {
         sPuestos = new ServicioPuestos();
     }
 
-    public Fachada getInstancia() {
+    public static Fachada getInstancia() {
         if (instance == null) {
-            return new Fachada();
+            instance = new Fachada();
         } 
         return instance;
     }
+
     public List<Sesion> getSesiones() {
         return sPersonas.getSesiones();
     }
@@ -39,12 +41,16 @@ public class Fachada {
         return null;
     }
 
-    public void loginAdmin(String ci, String c, List<Persona> propietarios) {
-
+    public Sesion loginAdministrador(String ci, String c) throws PeajeException{
+        return sPersonas.loginAdministrador(ci, c);
     }
 
-    public void loginPropietario(String ci, String c, List<Persona> propietarios) {
-        
+    public Sesion loginPropietario(String ci, String c) throws PeajeException{
+        return sPersonas.loginPropietario(ci, c);
+    }
+
+    public void logout(Sesion s) {
+        sPersonas.logout(s);
     }
 
     public void asignarBonificacion(List<EstrategiaBonificacion> listBonificaciones, List<Puesto> listPuestos) {
@@ -61,6 +67,14 @@ public class Fachada {
 
     public void CambioEstadoPropietarios(List<Persona> propietarios, List<EstadoPropietario> estadoPropietarios) {
         
+    }
+
+    public void agregarEstado(EstadoPropietario estado) {
+        sPersonas.agregarEstado(estado);
+    }
+
+    public void agregarPersona(Persona p) {
+        sPersonas.agregarPersona(p);
     }
 
 }

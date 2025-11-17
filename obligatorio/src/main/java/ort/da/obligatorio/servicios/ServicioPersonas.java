@@ -1,9 +1,13 @@
 package ort.da.obligatorio.servicios;
 import ort.da.obligatorio.dominio.Sesion;
+import ort.da.obligatorio.dominio.Personas.Administrador;
 import ort.da.obligatorio.dominio.Personas.Persona;
+import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
+import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 
 import java.util.List;
+
 
 import java.util.ArrayList;
 
@@ -25,12 +29,58 @@ public class ServicioPersonas {
     public void agregarEstado(EstadoPropietario e) {
         estados.add(e);
     }
-    /**/
-    public void loginPropietario(String ci, String pwd) {
-
+    
+    public Persona puedeLogin(String ci, String pwd) {
+        for (Persona p : personas) {
+            if(p.getCi().equals(ci)&& p.getPassword().equals(pwd)) {
+                return p;
+            }
+        }
+        return null;
     }
-    public void loginAdministrador(String ci, String pwd) {
-        
+    
+    public Sesion loginPropietario(String ci, String pwd) throws PeajeException {
+        Persona persona = puedeLogin(ci, pwd); 
+
+        if(persona != null && persona instanceof Propietario) {
+            Propietario propietario = (Propietario) persona;
+
+            if(!propietario.PuedeLogin()) {
+                throw new PeajeException("Usuario deshabilitado, no puede ingresar al sistema");
+            }
+            Sesion sesion = new Sesion(propietario);
+            sesiones.add(sesion);
+            return sesion;
+        }
+
+        throw new PeajeException("Acceso denegado");
+    }
+
+    public Sesion loginAdministrador(String ci, String pwd) throws PeajeException {
+         Persona persona = puedeLogin(ci, pwd); 
+        if(persona != null && persona instanceof Administrador) {
+            Administrador administrador = (Administrador) persona;
+            if(mismoAdminLogueado(administrador)) {
+                throw new PeajeException("Ud. Ya esta logueado");
+            }
+            Sesion sesion = new Sesion(administrador);
+            sesiones.add(sesion);
+            return sesion;
+        }
+
+        throw new PeajeException("Acceso denegado");
+    }
+
+    public boolean mismoAdminLogueado(Administrador a){
+        for (Sesion s : sesiones) {
+            if(s.getPersona() instanceof Administrador) {
+                Administrador adminLogueado = (Administrador) s.getPersona();
+                if(adminLogueado.getCi().equals(a.getCi())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void logout(Sesion s) {
@@ -47,10 +97,6 @@ public class ServicioPersonas {
 
     public List<EstadoPropietario> getEstados() {
         return estados;
-    }
-
-    public boolean puedeLogIn(Persona p) {
-        return true;
     }
 
 
