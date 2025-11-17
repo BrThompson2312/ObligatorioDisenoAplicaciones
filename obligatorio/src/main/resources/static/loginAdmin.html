@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrador</title>
+    <link rel="stylesheet" href="peaje.css">
+</head>
+<body class="bg-purple">
+    <div class="container">
+        <h1>Administrador</h1>
+        <p class="subtitle">Ingresa tus credenciales</p>
+        
+        <form class="login-form" onsubmit="submitAdminLogin(event)">
+            <div class="input-group">
+                <label for="adminUser">Usuario</label>
+                <input type="text" id="adminUser" placeholder="Ingresa tu usuario" required>
+            </div>
+            <div class="input-group">
+                <label for="adminPass">Contraseña</label>
+                <input type="password" id="adminPass" placeholder="Ingresa tu contraseña" required>
+            </div>
+            <button type="submit" class="login-btn admin-btn submit-btn">
+                <span class="icon">🤖</span>
+                <span>Iniciar Sesión</span>
+            </button>
+        </form>
+        
+        <a href="index.html" class="login-btn back-btn">
+            <span>← Atrás</span>
+        </a>
+    </div>
+
+    <script>
+        function submitAdminLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+            alert(`Login Administrador\nUsuario: ${user}`);
+            // Aquí puedes agregar la lógica de autenticación
+            // window.location.href = 'dashboard-admin.html';
+        }
+    </script>
+</body>
+</html>
