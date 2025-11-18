@@ -11,7 +11,7 @@
 <body class="bg-pink">
     <script src="utilesVista.js"></script>
     <div class="container">
-        <h1>Panel de Propietario</h1>
+        <h1 id="spnNombrePropietario"></h1>
         <p class="subtitle">Bienvenido al sistema 🚗</p>
         
         <div class="button-container">
@@ -23,12 +23,22 @@
     </div>
 
     <script>
+        urlIniciarVista="/menuPropietario/vistaConectadaPropietario";
+        const spnNombrePropietario = document.getElementById("spnNombrePropietario");
+
         function logout() {
             submit("acceso/logoutPropietario", null)    
         }
         function mostrar_usuarioNoAutenticado(urlDestino){
 			window.location.href = urlDestino;
 		}
+        function mostrar_nombrePropietario(nombrePropietario){
+			  spnNombrePropietario.innerHTML = "Menu de " + nombrePropietario;
+		}
+        function borrarNotificaciones(){
+            alert("Notificaciones borradas.");
+            // Aquí podrías agregar lógica para limpiar notificaciones del backend
+        }
     </script>
 </body>
 </html>

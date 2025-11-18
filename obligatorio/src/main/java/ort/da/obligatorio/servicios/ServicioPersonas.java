@@ -6,6 +6,7 @@ import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 
+
 import java.util.List;
 
 
@@ -50,6 +51,9 @@ public class ServicioPersonas {
             }
             Sesion sesion = new Sesion(propietario);
             sesiones.add(sesion);
+            for (Sesion s : sesiones) {
+                System.out.println(s.getFechaIngreso() + s.getPersona().getCi());
+            }
             return sesion;
         }
 
@@ -85,6 +89,9 @@ public class ServicioPersonas {
 
     public void logout(Sesion s) {
         sesiones.remove(s);
+        for (Sesion s1 : sesiones) {
+            System.out.println(s1.getFechaIngreso() + s1.getPersona().getCi());
+        }
     }
     
     public ArrayList<Sesion> getSesiones() {
