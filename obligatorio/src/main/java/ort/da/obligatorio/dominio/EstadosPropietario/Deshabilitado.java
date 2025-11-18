@@ -1,7 +1,10 @@
 package ort.da.obligatorio.dominio.EstadosPropietario;
 import ort.da.obligatorio.dominio.Bonificaciones.AsignacionDeBonificacion;
+import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 import ort.da.obligatorio.dominio.Personas.Notificacion;
 import ort.da.obligatorio.dominio.Personas.Propietario;
+
+
 
 public class Deshabilitado extends EstadoPropietarioAbstracto {
     public Deshabilitado() {
@@ -20,7 +23,7 @@ public class Deshabilitado extends EstadoPropietarioAbstracto {
     
     }
     @Override
-    public void agregarBonificacion(Propietario p, AsignacionDeBonificacion ab) {
-        
+    public void agregarBonificacion(Propietario p, AsignacionDeBonificacion ab) throws PeajeException{
+        throw new PeajeException("El propietario esta deshabilitado. No se pueden asignar bonificaciones");
     }
 }

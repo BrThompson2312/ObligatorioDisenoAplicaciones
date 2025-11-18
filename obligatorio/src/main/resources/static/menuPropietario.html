@@ -1,40 +1,222 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú Propietario</title>
+    <title>Tablero de Control del Propietario</title>
     <link rel="stylesheet" href="peaje.css">
     <script src="vistaWeb.js"></script>
 </head>
-<body class="bg-pink">
+<body class="dashboard">
     <script src="utilesVista.js"></script>
-    <div class="container">
-        <h1 id="spnNombrePropietario"></h1>
-        <p class="subtitle">Bienvenido al sistema 🚗</p>
-        
-        <div class="button-container">
-            <button class="login-btn owner-btn" onclick="logout()">
-                <span class="icon">🚪</span>
-                <span>Cerrar Sesión</span>
-            </button>
+    
+    <div class="header">
+        <h1>🚗 Tablero de control del propietario</h1>
+        <a class="logout-link" onclick="logout()">Salir</a>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Resumen del propietario -->
+        <div class="summary-card">
+            <h2>Resumen del propietario</h2>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-label">Nombre completo</div>
+                    <div class="summary-value" id="spnNombrePropietario"></div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Estado</div>
+                    <div class="summary-value" id="spnEstadoPropietario"></div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Saldo actual</div>
+                    <div class="summary-value" id="spnSaldoActual"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bonificaciones y Vehículos -->
+        <div class="two-column">
+            <!-- Bonificaciones asignadas -->
+            <div class="summary-card">
+                <h2>Bonificaciones asignadas</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Bonificación</th>
+                            <th>Puesto</th>
+                            <th>Fecha asignada</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaBonificaciones">
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Vehículos registrados -->
+            <div class="summary-card">
+                <h2>Vehículos registrados</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Matrícula</th>
+                            <th>Modelo</th>
+                            <th>Color</th>
+                            <th>Tránsitos</th>
+                            <th>Monto total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaVehiculos">
+                        <tr>
+                            <td>SAB1234</td>
+                            <td>Sedán</td>
+                            <td>Azul</td>
+                            <td>12</td>
+                            <td>$ 1.240,00</td>
+                        </tr>
+                        <tr>
+                            <td>SCD5678</td>
+                            <td>SUV</td>
+                            <td>Gris</td>
+                            <td>8</td>
+                            <td>$ 980,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tránsitos realizados -->
+        <div class="summary-card">
+            <h2>Tránsitos realizados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Puesto</th>
+                        <th>Matrícula</th>
+                        <th>Categoría</th>
+                        <th>Monto tarifa</th>
+                        <th>Bonificación</th>
+                        <th>Monto bonificación</th>
+                        <th>Monto pagado</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaTransitos">
+                    <tr>
+                        <td>Peaje Sur</td>
+                        <td>SAB1234</td>
+                        <td>Motocicleta</td>
+                        <td>$ 120,00</td>
+                        <td>Frecuente</td>
+                        <td>-$ 24,00</td>
+                        <td>$ 96,00</td>
+                        <td>2025-09-19</td>
+                        <td>18:45</td>
+                    </tr>
+                    <tr>
+                        <td>Peaje Norte</td>
+                        <td>SCD5678</td>
+                        <td>Camión</td>
+                        <td>$ 180,00</td>
+                        <td>Trabajador</td>
+                        <td>-$ 36,00</td>
+                        <td>$ 144,00</td>
+                        <td>2025-09-18</td>
+                        <td>08:22</td>
+                    </tr>
+                    <tr>
+                        <td>Peaje Centro</td>
+                        <td>SAB1234</td>
+                        <td>Motocicleta</td>
+                        <td>$ 120,00</td>
+                        <td>Frecuente</td>
+                        <td>-$ 24,00</td>
+                        <td>$ 96,00</td>
+                        <td>2025-09-17</td>
+                        <td>19:05</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Notificaciones del sistema -->
+        <div class="notifications">
+            <h2>Notificaciones del sistema</h2>
+            <button class="clear-btn" onclick="borrarNotificaciones()">Borrar notificaciones</button>
         </div>
     </div>
 
     <script>
         urlIniciarVista="/menuPropietario/vistaConectadaPropietario";
         const spnNombrePropietario = document.getElementById("spnNombrePropietario");
+        const spnEstadoPropietario = document.getElementById("spnEstadoPropietario");
+        const spnSaldoActual = document.getElementById("spnSaldoActual");
+
 
         function logout() {
             submit("acceso/logoutPropietario", null)    
         }
+        
         function mostrar_usuarioNoAutenticado(urlDestino){
-			window.location.href = urlDestino;
-		}
+            window.location.href = urlDestino;
+        }
+        
         function mostrar_nombrePropietario(nombrePropietario){
-			  spnNombrePropietario.innerHTML = "Menu de " + nombrePropietario;
-		}
+            spnNombrePropietario.innerHTML = nombrePropietario;
+        }
+
+        function mostrar_estadoPropietario(estadoPropietario){
+            spnEstadoPropietario.innerHTML = estadoPropietario;
+        }
+
+        function mostrar_saldoActual(saldoActual){
+            spnSaldoActual.innerHTML = "$ " + saldoActual.toFixed(2);
+        }
+
+        function procesarRespuesta(respuesta) {
+            if (respuesta.tipo === "usuarioNoAutenticado") {
+                window.location.href = respuesta.valor;
+                return;
+            }
+            
+            if (respuesta.tipo === "nombrePropietario") {
+                document.getElementById("spnNombrePropietario").textContent = respuesta.valor;
+            }
+            
+            if (respuesta.tipo === "estadoPropietario") {
+                document.getElementById("spnEstadoPropietario").textContent = respuesta.valor;
+            }
+            
+            if (respuesta.tipo === "saldoActual") {
+                document.getElementById("spnSaldoActual").textContent = "$ " + respuesta.valor.toFixed(2);
+            }
+            
+            if (respuesta.tipo === "bonificaciones") {
+                mostrar_bonificaciones(respuesta.valor);
+            }
+        }
+
+        function mostrar_bonificaciones(bonificaciones) {
+            const tbody = document.getElementById("tablaBonificaciones");
+            tbody.innerHTML = ""; // Limpiar contenido existente
+            
+            if (!bonificaciones || bonificaciones.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">No hay bonificaciones asignadas</td></tr>';
+                return;
+            }
+            
+            bonificaciones.forEach(bonif => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = bonif.tipo;
+                row.insertCell(1).textContent = bonif.puesto;
+                row.insertCell(2).textContent = bonif.fechaAsignacion.split('T')[0]; // Solo la fecha, sin hora
+            });
+        }
+        
+        
         function borrarNotificaciones(){
             alert("Notificaciones borradas.");
             // Aquí podrías agregar lógica para limpiar notificaciones del backend

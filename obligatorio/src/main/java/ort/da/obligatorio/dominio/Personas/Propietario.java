@@ -1,9 +1,12 @@
 package ort.da.obligatorio.dominio.Personas;
 import ort.da.obligatorio.dominio.Bonificaciones.AsignacionDeBonificacion;
+import ort.da.obligatorio.dominio.EstadosPropietario.EstadoPropietarioAbstracto;
+
+import java.util.ArrayList;
 import java.util.List;
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 
-public class Propietario extends Persona implements EstadoPropietario {
+public class Propietario extends Persona{
     
     private double saldoActual;
     private double saldoMinimo;
@@ -19,8 +22,15 @@ public class Propietario extends Persona implements EstadoPropietario {
         this.saldoActual = saldoActual;
         this.saldoMinimo = saldoMinimo;
         this.estado = estado;
+        this.listBonificaciones = new ArrayList<>();
+        this.listVehiculos = new ArrayList<>();
+        this.listNotificacions = new ArrayList<>();
         estado.puedeLogin(this);
-        //estado.registraTransito(this);
+    
+    }
+
+    public EstadoPropietarioAbstracto getEstado() {
+        return estado.getEstado();
     }
 
     public double getSaldoActual() {
@@ -55,28 +65,13 @@ public class Propietario extends Persona implements EstadoPropietario {
         this.puedeTransitar = puedeTransitar;
     }
 
-    @Override
-    public void agregarBonificacion(Propietario p, AsignacionDeBonificacion ab) {
-        // TODO Auto-generated method stub
-        
+    public List<AsignacionDeBonificacion> getListBonificaciones() {
+        return listBonificaciones;
     }
 
-    @Override
-    public void agregarNotificacion(Propietario p, Notificacion n) {
-        // TODO Auto-generated method stub
-        
+    public void agregarBonificacion(AsignacionDeBonificacion ab) {
+        getListBonificaciones().add(ab);
     }
 
-    @Override
-    public void puedeLogin(Propietario p) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public String registraTransito() {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
 }

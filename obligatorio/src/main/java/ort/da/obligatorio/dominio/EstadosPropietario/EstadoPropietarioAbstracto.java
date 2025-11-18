@@ -1,8 +1,10 @@
 package ort.da.obligatorio.dominio.EstadosPropietario;
 import ort.da.obligatorio.dominio.Bonificaciones.AsignacionDeBonificacion;
+import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 import ort.da.obligatorio.dominio.Personas.Notificacion;
 import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
+
 
 public abstract class EstadoPropietarioAbstracto implements EstadoPropietario {
     
@@ -20,8 +22,8 @@ public abstract class EstadoPropietarioAbstracto implements EstadoPropietario {
 
     }
 
-    public void agregarBonificacion(Propietario p, AsignacionDeBonificacion ab) {
-        
+    public void agregarBonificacion(Propietario p, AsignacionDeBonificacion ab) throws PeajeException{
+        p.agregarBonificacion(ab);
     }
 
     public void puedeLogin(Propietario p) {
@@ -30,6 +32,10 @@ public abstract class EstadoPropietarioAbstracto implements EstadoPropietario {
 
     public String registraTransito() {
         return null;
+    }
+
+    public EstadoPropietarioAbstracto getEstado() {
+        return this;
     }
     
 }

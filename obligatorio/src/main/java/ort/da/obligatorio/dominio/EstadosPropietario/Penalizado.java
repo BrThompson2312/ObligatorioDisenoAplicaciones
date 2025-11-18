@@ -15,8 +15,4 @@ public class Penalizado extends EstadoPropietarioAbstracto {
     public void agregarNotificacion(Propietario p, Notificacion n) {
     
     }
-    @Override
-    public void agregarBonificacion(Propietario p, AsignacionDeBonificacion ab) {
-        
-    }
 }

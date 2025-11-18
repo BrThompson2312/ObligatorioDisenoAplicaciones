@@ -6,6 +6,7 @@ import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 import ort.da.obligatorio.dominio.interfaces.EstrategiaBonificacion;
 import ort.da.obligatorio.dominio.Sesion;
 import ort.da.obligatorio.dominio.Personas.Persona;
+import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.Puestos.Puesto;
 import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 import jakarta.servlet.http.HttpSession;
@@ -54,8 +55,12 @@ public class Fachada {
         sPersonas.logout(s);
     }
 
-    public void asignarBonificacion(List<EstrategiaBonificacion> listBonificaciones, List<Puesto> listPuestos) {
+    public void menuAsignarBonificacion(List<EstrategiaBonificacion> listBonificaciones, List<Puesto> listPuestos) {
 
+    }
+
+    public void asignarBonificacion(EstrategiaBonificacion eb, Puesto p, Propietario propietario) throws PeajeException{
+        sPersonas.asignarBonificacion(eb, p, propietario);
     }
 
     public void menuAdministrador() {
@@ -74,8 +79,16 @@ public class Fachada {
         sPersonas.agregarEstado(estado);
     }
 
+    public void agregarEstrategiaBonificacion(EstrategiaBonificacion eb) {
+        sPuestos.agregarEstrategiaBonificacion(eb);
+    }
+
     public void agregarPersona(Persona p) {
         sPersonas.agregarPersona(p);
+    }
+
+    public void agregarPuesto(Puesto p) {
+        sPuestos.agregarPuesto(p);
     }
 
 }

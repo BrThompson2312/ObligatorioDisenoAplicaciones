@@ -1,11 +1,15 @@
 package ort.da.obligatorio.servicios;
 import ort.da.obligatorio.dominio.Sesion;
+import ort.da.obligatorio.dominio.Bonificaciones.AsignacionDeBonificacion;
 import ort.da.obligatorio.dominio.Personas.Administrador;
 import ort.da.obligatorio.dominio.Personas.Persona;
 import ort.da.obligatorio.dominio.Personas.Propietario;
+import ort.da.obligatorio.dominio.Puestos.Puesto;
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
+import ort.da.obligatorio.dominio.interfaces.EstrategiaBonificacion;
 import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 import jakarta.servlet.http.HttpSession;
+
 
 
 import java.util.List;
@@ -105,5 +109,21 @@ public class ServicioPersonas {
         return estados;
     }
 
+    public boolean puestoSinMismaBonificacion(Propietario p, Puesto puesto) throws PeajeException {
+        for (AsignacionDeBonificacion ab : p.getListBonificaciones()) {
+            if(ab.getPuesto().equals(puesto)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void asignarBonificacion(EstrategiaBonificacion eb, Puesto p, Propietario propietario) throws PeajeException {
+        AsignacionDeBonificacion ab = new AsignacionDeBonificacion(propietario, p, eb);
+        if(!puestoSinMismaBonificacion(propietario, p)){
+            throw new PeajeException("Ya tiene una bonifiacion asignada para este puesto");
+        }
+        propietario.getEstado().agregarBonificacion(propietario, ab);
+    }
 
 }

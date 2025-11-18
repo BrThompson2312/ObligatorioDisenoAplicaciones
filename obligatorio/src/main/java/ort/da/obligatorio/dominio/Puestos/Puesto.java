@@ -10,7 +10,6 @@ public class Puesto {
     private String direccion;
     private List<Transito> listTransito;
     private List<Tarifa> listTarifas;
-    public Transito transito;
 
     public Puesto(String nombre, String direccion) {
         this.nombre = nombre;
@@ -18,19 +17,27 @@ public class Puesto {
     }
 
     public List<Transito> getTransitos() {
-        return null;
+        return listTransito;
     }
 
     public List<Tarifa> getTarifas() {
-        return null;
+        return listTarifas;
     }
 
     public void agregarTransito(Transito t) {
         listTransito.add(t);
     }
+    
+    public void agregarTarifa(Tarifa ta) {
+        listTarifas.add(ta);
+    }
 
-    public Propietario getPropietario() {
-        return transito.getPropietario();
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getDireccion() {
+        return direccion;
     }
     
 }

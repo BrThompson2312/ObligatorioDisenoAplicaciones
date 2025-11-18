@@ -16,8 +16,4 @@ public class Suspendido extends EstadoPropietarioAbstracto {
     public void agregarNotificacion(Propietario p, Notificacion n) {
     
     }
-    @Override
-    public void agregarBonificacion(Propietario p, AsignacionDeBonificacion ab) {
-        
-    }
 }
