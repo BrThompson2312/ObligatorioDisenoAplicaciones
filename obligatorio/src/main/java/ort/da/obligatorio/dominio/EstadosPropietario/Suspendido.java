@@ -9,11 +9,7 @@ public class Suspendido extends EstadoPropietarioAbstracto {
         super("Suspendido");
     }
     @Override
-    public String registraTransito() {
-        return null;
-    }
-    @Override
-    public void agregarNotificacion(Propietario p, Notificacion n) {
-    
+    public void registraTransito(Propietario p) {
+        p.setPuedeTransitar(false);
     }
 }

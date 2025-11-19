@@ -19,7 +19,7 @@ public abstract class EstadoPropietarioAbstracto implements EstadoPropietario {
     }
 
     public void agregarNotificacion(Propietario p, Notificacion n) {
-
+        p.agregarNotificacion(n);
     }
 
     public void agregarBonificacion(Propietario p, AsignacionDeBonificacion ab) throws PeajeException{
@@ -30,8 +30,8 @@ public abstract class EstadoPropietarioAbstracto implements EstadoPropietario {
         p.setPuedeLogin(true);
     }
 
-    public String registraTransito() {
-        return null;
+    public void registraTransito(Propietario p) {
+        p.setPuedeTransitar(true);
     }
 
     public EstadoPropietarioAbstracto getEstado() {

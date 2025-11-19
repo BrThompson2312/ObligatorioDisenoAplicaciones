@@ -1,4 +1,6 @@
 package ort.da.obligatorio.dominio.EstadosPropietario;
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Prop;
+
 import ort.da.obligatorio.dominio.Bonificaciones.AsignacionDeBonificacion;
 import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 import ort.da.obligatorio.dominio.Personas.Notificacion;
@@ -11,16 +13,12 @@ public class Deshabilitado extends EstadoPropietarioAbstracto {
         super("Deshabilitado");
     }
     @Override
-    public String registraTransito() {
-        return null;
+    public void registraTransito(Propietario p) {
+        p.setPuedeTransitar(false);
     }
     @Override
     public void puedeLogin(Propietario p) {
         p.setPuedeLogin(false);
-    }
-    @Override
-    public void agregarNotificacion(Propietario p, Notificacion n) {
-    
     }
     @Override
     public void agregarBonificacion(Propietario p, AsignacionDeBonificacion ab) throws PeajeException{

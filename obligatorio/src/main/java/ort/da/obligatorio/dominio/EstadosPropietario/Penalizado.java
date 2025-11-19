@@ -8,11 +8,7 @@ public class Penalizado extends EstadoPropietarioAbstracto {
         super("Penalizado");
     }
     @Override
-    public String registraTransito() {
-        return null;
-    }
-    @Override
     public void agregarNotificacion(Propietario p, Notificacion n) {
-    
+        //No agrega notificacion
     }
 }

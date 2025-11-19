@@ -7,14 +7,4 @@ public class Habilitado extends EstadoPropietarioAbstracto {
     public Habilitado() {
         super("Habilitado");
     }
-    @Override
-    public String registraTransito() {
-        return null;
-    }
-    @Override
-    public void agregarNotificacion(Propietario p, Notificacion n) {
-    
-    }
-
-
 }

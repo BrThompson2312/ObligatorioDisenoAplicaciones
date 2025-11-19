@@ -6,12 +6,16 @@ public class Vehiculo {
     private String color;
     private String modelo;
     private CategoriaDeVehiculo categoriaDeVehiculo;
+    private int totalTransitos;
+    private double totalPagado;
     
     public Vehiculo(String matricula, String color, String modelo, CategoriaDeVehiculo categoriaDeVehiculo) {
         this.matricula = matricula;
         this.color = color;
         this.modelo = modelo;
         this.categoriaDeVehiculo = categoriaDeVehiculo;
+        this.totalTransitos = 0;
+        this.totalPagado = 0.0;
     }
 
     public String getMatricula() {
@@ -44,5 +48,21 @@ public class Vehiculo {
 
     public void setCategoriaDeVehiculo(CategoriaDeVehiculo categoriaDeVehiculo) {
         this.categoriaDeVehiculo = categoriaDeVehiculo;
+    }
+
+    public int getTotalTransitos() {
+        return totalTransitos;
+    }
+
+    public void setTotalTransitos(int totalTransitos) {
+        this.totalTransitos = totalTransitos;
+    }
+
+    public double getTotalPagado() {
+        return totalPagado;
+    }
+
+    public void setTotalPagado(double totalPagado) {
+        this.totalPagado = totalPagado;
     }
 }
