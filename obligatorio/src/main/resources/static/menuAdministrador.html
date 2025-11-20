@@ -75,18 +75,19 @@
                         </select>
                     </div>
 
-                    <!-- Botón Buscar -->
-                    <button class="btn-primary" onclick="buscarPropietario()">
-                        🔍 Buscar propietario
-                    </button>
+                    
                 </div>
 
                 <!-- Panel Derecho -->
                 <div class="bonificaciones-panel-right">
-                    <h3>Cédlula de identidad</h3>
-                    <input type="text" id="inputCedula" placeholder="12345678" class="input-cedula">
-
+                    <h3>Cédula de identidad</h3>
+                    <input type="text" id="inputCedula" placeholder="Ej:12345678" class="input-cedula">
+                    <!-- Botón Buscar -->
+                    <button class="btn-primary" onclick="buscarPropietario()">
+                        🔍 Buscar propietario
+                    </button>       
                     <div id="infoPropietario" class="propietario-card" style="display: none;">
+                        
                         <div class="propietario-header">
                             <h4>Propietario</h4>
                         </div>
@@ -118,9 +119,47 @@
         </div>
 
         <div id="vistaEstado" class="vista">
-            <div class="container">
-                <h2>Estado del Sistema</h2>
-                <p>Aquí se mostrará el estado general del sistema de peajes.</p>
+            <div class="estado-container">
+                <div class="estado-header">
+                    <div class="estado-icon">📋</div>
+                    <h2>Cambiar estado de propietario</h2>
+                    <p class="estado-subtitle">Ingrese la cédula, revise el estado actual y seleccione un nuevo estado (datos de ejemplo).</p>
+                </div>
+
+                <div class="estado-content">
+                    <!-- Panel Izquierdo: Búsqueda -->
+                    <div class="estado-panel">
+                        <h3>Cédula de identidad</h3>
+                        <div class="form-group">
+                            <input type="text" id="inputCedulaEstado" placeholder="12345678" class="input-cedula">
+                            <button class="btn-buscar" onclick="buscarPropietarioEstado()">Buscar</button>
+                        </div>
+
+                        <!-- Info Propietario -->
+                        <div id="infoPropietarioEstado" class="propietario-info-box">
+                            <h4>Propietario</h4>
+                            <div class="info-row">
+                                <span class="info-label">Nombre:</span>
+                                <span id="nombrePropEstado" class="info-value">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Estado actual:</span>
+                                <span id="estadoActualProp" class="info-value estado-badge">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel Derecho: Cambio de Estado -->
+                    <div class="estado-panel">
+                        <h3>Estados definidos</h3>
+                        <div class="form-group">
+                            <select id="selectNuevoEstado" class="select-estado">
+                                <option value="">Cargando estados...</option>
+                            </select>
+                            <button class="btn-cambiar-estado" onclick="cambiarEstadoPropietario()">Cambiar estado</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -130,7 +169,8 @@
 
         const datosRecibidos = {
             puestos: null,
-            bonificaciones: null
+            bonificaciones: null,
+            estados: null
         };
 
         function cambiarVista(vista) {
@@ -176,18 +216,14 @@
             }
             
             if (respuesta.tipo === "puestos"){
-                console.log("aaaaaaaaaaaaaaaaaa");
                 mostrar_puestos(respuesta.valor);
             }
 
-            if (respuesta.tipo === "puestos"){
-                console.log("bbbbbbbbbbbbbbbbbb");
+            if (respuesta.tipo === "puestosBonificaciones"){
                 mostrar_puestosBonificaciones(respuesta.valor);
             }
 
             if (respuesta.tipo === "bonificaciones") {
-                console.log("✅ Bonificaciones recibidas:", respuesta.valor);
-                console.log("Cantidad:", respuesta.valor.length);
                 datosRecibidos.bonificaciones = respuesta.valor;
                 mostrar_bonificaciones(respuesta.valor);
             }
@@ -195,11 +231,219 @@
             if (respuesta.tipo === "resultadoEmulacion") {
                 console.log("✅ Resultado emulación:", respuesta.valor);
                 mostrar_resultadoEmulacion(respuesta.valor);
-            }      
+            }
 
-            console.log("=== ESTADO ACTUAL ===");
-            console.log("Puestos guardados:", datosRecibidos.puestos);
-            console.log("Bonificaciones guardadas:", datosRecibidos.bonificaciones);
+            if (respuesta.tipo === "propietarioEncontrado") {
+                console.log("✅ Propietario encontrado:", respuesta.valor);
+                mostrar_propietarioEncontrado(respuesta.valor);
+            }
+
+            if (respuesta.tipo === "propietarioEncontradoEstado") {
+                mostrar_propietarioEnEstado(respuesta.valor);
+            }
+
+            if (respuesta.tipo === "bonificacionAsignada") {
+                alert(respuesta.valor);
+            }
+
+            if (respuesta.tipo === "estadoCambiado") {
+                alert(respuesta.valor);
+            }
+        }
+
+        function cambiarEstadoPropietario(){
+            const ci = document.getElementById('inputCedulaEstado').value.trim();
+            const selectNuevoEstado = document.getElementById('selectNuevoEstado');
+
+            if (!ci) {
+                alert('Por favor ingrese una cédula');
+                return;
+            }
+            if (selectNuevoEstado.value === "") {
+                alert('Por favor seleccione un nuevo estado');
+                return;
+            }
+
+            const params = new URLSearchParams();
+            params.append('ci', ci);
+            params.append('nuevoEstado', selectNuevoEstado.value);
+
+            console.log('📤 Enviando cambio de estado:', {
+                ci: ci,
+                nuevoEstado: selectNuevoEstado.value
+            });
+
+            submit("menuAdministrador/cambiarEstadoPropietario", params.toString());
+        }
+
+        function mostrar_estados(estados) {
+            console.log("🔍 === INICIO mostrar_estados ===");
+            console.log("📦 Estados recibidos:", estados);
+            
+            const select = document.getElementById('selectNuevoEstado');
+            
+            if (!select) {
+                console.error("❌ No se encontró el select de estados");
+                return;
+            }
+            
+            select.innerHTML = '<option value="">Seleccione un estado</option>';
+            
+            if (!estados || estados.length === 0) {
+                select.innerHTML = '<option value="">No hay estados disponibles</option>';
+                return;
+            }
+            
+            estados.forEach((estado, index) => {
+                console.log(`  ➕ Agregando estado ${index}:`, estado.nombre);
+                const option = document.createElement('option');
+                option.value = estado.nombre;
+                option.textContent = estado.nombre;
+                select.appendChild(option);
+            });
+            
+            console.log("✅ === FIN mostrar_estados ===");
+        }
+
+        function mostrar_propietarioEncontradoEstado(propietario) {
+            console.log("🔍 === INICIO mostrar_propietarioEncontradoEstado ===");
+            console.log("📦 Propietario recibido:", propietario);
+            
+            const infoPropietarioEstado = document.getElementById('infoPropietarioEstado');
+            const nombreProp = document.getElementById('nombrePropEstado');
+            const estadoActual = document.getElementById('estadoActualProp');
+            const selectNuevoEstado = document.getElementById('selectNuevoEstado');
+            
+            console.log("🎯 Elementos encontrados:");
+            console.log("  - infoPropietarioEstado:", infoPropietarioEstado);
+            console.log("  - nombreProp:", nombreProp);
+            console.log("  - estadoActual:", estadoActual);
+            
+            if (!infoPropietarioEstado) {
+                console.error("❌ No se encontró el elemento infoPropietarioEstado");
+                return;
+            }
+            
+            // Actualizar nombre
+            if (nombreProp) {
+                nombreProp.textContent = propietario.nombre;
+                console.log("✅ Nombre actualizado:", nombreProp.textContent);
+            }
+            
+            // Actualizar estado con badge
+            if (estadoActual) {
+                estadoActual.textContent = propietario.estado;
+                const claseEstado = 'info-value estado-badge estado-' + propietario.estado.toLowerCase();
+                estadoActual.className = claseEstado;
+                console.log("✅ Estado actualizado:", estadoActual.textContent);
+                console.log("✅ Clase aplicada:", estadoActual.className);
+            }
+            
+            // Preseleccionar el estado en el select
+            if (selectNuevoEstado) {
+                selectNuevoEstado.value = propietario.estado;
+                console.log("✅ Select actualizado:", selectNuevoEstado.value);
+            }
+            
+            // Mostrar el panel con animación
+            infoPropietarioEstado.classList.add('show');
+            
+            console.log("📦 Clases del panel:", infoPropietarioEstado.className);
+            console.log("✅ === FIN mostrar_propietarioEnEstado ===");
+        }
+
+        function asignarBonificacion(){
+            const ci = document.getElementById('inputCedula').value.trim();
+            const selectBonif = document.getElementById('selectBonificacion');
+            const selectPuesto = document.getElementById('selectPuestoBonif');
+
+            if (!ci) {
+                alert('Por favor ingrese una cédula');
+                return;
+            }
+            if (selectBonif.value === "") {
+                alert('Por favor seleccione una bonificación');
+                return;
+            }
+            if (selectPuesto.value === "") {
+                alert('Por favor seleccione un puesto');
+                return;
+            }
+
+            const params = new URLSearchParams();
+            params.append('ci', ci);
+            params.append('nombreBonificacion', selectBonif.value);
+            params.append('nombrePuesto', selectPuesto.value);
+
+            console.log('📤 Enviando asignación:', {
+                ci: ci,
+                bonificacion: selectBonif.value,
+                puesto: selectPuesto.value
+            });
+
+            submit("menuAdministrador/asignarBonificacion", params.toString());
+        }
+
+        function buscarPropietarioEstado() {
+            const ci = document.getElementById('inputCedulaEstado').value.trim();
+
+            if (!ci) {
+                alert('Por favor ingrese una cédula');
+                return;
+            }
+            const params = new URLSearchParams();
+            params.append('ci', ci);
+            // Usar el mismo endpoint
+            submit("menuAdministrador/buscarPropietarioEstado", params.toString());
+        }
+
+        function buscarPropietario() {
+            const ci = document.getElementById('inputCedula').value.trim();
+
+            if (!ci) {
+                alert('Por favor ingrese una cédula');
+                return;
+            }
+            const params = new URLSearchParams();
+            params.append('ci', ci);
+            submit("menuAdministrador/buscarPropietario", params.toString());
+        }
+
+        function mostrar_propietarioEncontrado(propietario) {
+            console.log("🔍 Mostrando propietario:", propietario);
+            
+            const infoPropietario = document.getElementById('infoPropietario');
+            const nombreProp = document.getElementById('nombreProp');
+            const estadoProp = document.getElementById('estadoProp');
+            const listaBonificaciones = document.getElementById('listaBonificaciones');
+            
+            // Mostrar nombre
+            nombreProp.textContent = propietario.nombre;
+            
+            // Mostrar estado con clase CSS apropiada
+            estadoProp.textContent = propietario.estado;
+            estadoProp.className = 'value estado-' + propietario.estado.toLowerCase();
+            
+            // Mostrar bonificaciones
+            if (!propietario.bonificaciones || propietario.bonificaciones.length === 0) {
+                listaBonificaciones.innerHTML = '<p class="empty-message">Sin bonificaciones asignadas</p>';
+            } else {
+                listaBonificaciones.innerHTML = '';
+                propietario.bonificaciones.forEach(bonif => {
+                    const div = document.createElement('div');
+                    div.className = 'bonificacion-item';
+                    div.innerHTML = `
+                        <div class="bonif-info">
+                            <strong>🎁 ${bonif.nombreBonificacion}</strong>
+                            <span>📍 ${bonif.nombrePuesto}</span>
+                        </div>
+                    `;
+                    listaBonificaciones.appendChild(div);
+                });
+            }
+            
+            // Mostrar el panel
+            infoPropietario.style.display = 'block';
         }
 
         function mostrar_bonificaciones(bonificaciones) {
@@ -403,6 +647,8 @@
             
             contenedor.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
+
+        
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log("=== DOM CARGADO ===");

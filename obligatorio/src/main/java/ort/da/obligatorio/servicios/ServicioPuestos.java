@@ -31,8 +31,7 @@ public class ServicioPuestos {
                 + vehiculo.getCategoriaDeVehiculo());
         }
         
-        AsignacionDeBonificacion asignacion = 
-            propietario.getAsignacionDeBonificacionParaPuesto(puesto);
+        AsignacionDeBonificacion asignacion = propietario.getAsignacionDeBonificacionParaPuesto(puesto);
         EstrategiaBonificacion estrategia = (asignacion != null) 
             ? asignacion.getEstrategia() 
             : null;
@@ -49,8 +48,7 @@ public class ServicioPuestos {
         }
 
         if (!propietario.PuedeTransitar()) {
-            throw new PeajeException("El propietario del vehiculo esta " 
-                + propietario.getEstado().getNombre() + ", no puede realizar transitos");
+            throw new PeajeException("El propietario del vehiculo esta " + propietario.getEstado().getNombre() + ", no puede realizar transitos");
         }
         
         Transito transito = new Transito(propietario, vehiculo, puesto, tarifa, estrategia, monto);
@@ -108,4 +106,15 @@ public class ServicioPuestos {
         }
         return null;
     }
+
+    public EstrategiaBonificacion getEstrategiaBonificacionPorNombre(String nombre){
+        for (EstrategiaBonificacion eb : listBonificaciones) {
+            if (eb.getClass().getSimpleName().equals(nombre)) {
+                return eb;
+            }
+        };
+        return null;
+    }
+
+
 }

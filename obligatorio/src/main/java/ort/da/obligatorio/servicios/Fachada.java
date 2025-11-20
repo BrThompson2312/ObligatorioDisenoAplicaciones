@@ -6,6 +6,7 @@ import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 import ort.da.obligatorio.dominio.interfaces.EstrategiaBonificacion;
 import ort.da.obligatorio.dominio.Sesion;
 import ort.da.obligatorio.dominio.DTOs.BonificacionDTO;
+import ort.da.obligatorio.dominio.DTOs.EstadoPropietarioDTO;
 import ort.da.obligatorio.dominio.Personas.Persona;
 import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.Puestos.Puesto;
@@ -31,6 +32,14 @@ public class Fachada {
             instance = new Fachada();
         } 
         return instance;
+    }
+
+    public List<EstadoPropietario> getEstadosPropietario() {
+        return sPersonas.getEstados();
+    }
+
+    public List<EstadoPropietarioDTO> getEstadosPropietarioDTOs() {
+        return EstadoPropietarioDTO.fromList(getEstadosPropietario());
     }
 
     public List<Sesion> getSesiones() {
@@ -65,6 +74,25 @@ public class Fachada {
         sPersonas.logout(s);
     }
 
+    public void asignarBonificacionPorNombres(String ci, String nombreBonificacion, String nombrePuesto) throws PeajeException {
+        Propietario propietario = sPersonas.getPropietarioPorCi(ci);
+        if (propietario == null) {
+            throw new PeajeException("No se encontró el propietario con cédula: " + ci);
+        }
+        
+        Puesto puesto = sPuestos.getPuestoPorNombre(nombrePuesto);
+        if (puesto == null) {
+            throw new PeajeException("No se encontró el puesto: " + nombrePuesto);
+        }
+        
+        EstrategiaBonificacion estrategia = sPuestos.getEstrategiaBonificacionPorNombre(nombreBonificacion);
+        if (estrategia == null) {
+            throw new PeajeException("No se encontró la bonificación: " + nombreBonificacion);
+        }
+        
+        asignarBonificacion(estrategia, puesto, propietario);
+    }
+
     public void asignarBonificacion(EstrategiaBonificacion eb, Puesto p, Propietario propietario) throws PeajeException{
         sPersonas.asignarBonificacion(eb, p, propietario);
     }
@@ -85,8 +113,8 @@ public class Fachada {
         sPersonas.borrarNotificacionesPropietario(propietario);
     }
 
-    public void CambioEstadoPropietarios(List<Persona> propietarios, List<EstadoPropietario> estadoPropietarios) {
-        
+    public void cambiarEstadoPropietario(Persona propietario, String estadoPropietario) throws PeajeException {
+        sPersonas.cambiarEstadoPropietario(propietario, estadoPropietario);
     }
 
     public void agregarEstado(EstadoPropietario estado) {
@@ -108,4 +136,9 @@ public class Fachada {
     public List<Transito> getTransitosPorPropietario(Propietario propietario){
         return sPuestos.getTransitosPorPropietario(propietario);
     }
+
+    public Propietario getPropietarioPorCi(String ci) {
+        return sPersonas.getPropietarioPorCi(ci);
+    }
+
 }

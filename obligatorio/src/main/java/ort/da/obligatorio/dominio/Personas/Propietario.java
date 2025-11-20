@@ -63,6 +63,13 @@ public class Propietario extends Persona{
         this.saldoMinimo = saldoMinimo;
     }
 
+    public void setEstado(EstadoPropietario estadoPropietario) throws Exception {
+        if(estadoPropietario.getEstado().getNombre().equals(this.estado.getEstado().getNombre())) {
+            throw new Exception("El propietario ya esta en el estado: " + estadoPropietario.getEstado().getNombre());
+        }
+        this.estado = estadoPropietario;
+    }
+
     public void setPuedeLogin(boolean puedeLogin) {
         this.puedeLogin = puedeLogin;
     }
@@ -111,4 +118,5 @@ public class Propietario extends Persona{
     public void eliminarNotificaciones() {
         getListNotificaciones().clear();
     }
+
 }

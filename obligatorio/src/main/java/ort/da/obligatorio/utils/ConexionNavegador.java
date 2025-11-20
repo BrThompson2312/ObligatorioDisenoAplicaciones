@@ -46,6 +46,7 @@ public class ConexionNavegador  {
         }
    
     }
+    @SuppressWarnings("null")
     public void enviarMensaje(String mensaje) {
        
         if(conexionSSE==null) return;

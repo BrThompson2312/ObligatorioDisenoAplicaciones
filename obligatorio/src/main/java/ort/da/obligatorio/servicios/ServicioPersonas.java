@@ -2,6 +2,7 @@ package ort.da.obligatorio.servicios;
 import ort.da.obligatorio.dominio.Sesion;
 import ort.da.obligatorio.dominio.Bonificaciones.AsignacionDeBonificacion;
 import ort.da.obligatorio.dominio.Personas.Administrador;
+import ort.da.obligatorio.dominio.Personas.Notificacion;
 import ort.da.obligatorio.dominio.Personas.Persona;
 import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.Puestos.Puesto;
@@ -10,12 +11,12 @@ import ort.da.obligatorio.dominio.interfaces.EstrategiaBonificacion;
 import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 import jakarta.servlet.http.HttpSession;
 import ort.da.obligatorio.dominio.Personas.Vehiculo;
-
-
+import ort.da.obligatorio.dominio.EstadosPropietario.Habilitado;
+import ort.da.obligatorio.dominio.EstadosPropietario.Deshabilitado;
+import ort.da.obligatorio.dominio.EstadosPropietario.Suspendido;
+import ort.da.obligatorio.dominio.EstadosPropietario.Penalizado;
 
 import java.util.List;
-
-
 import java.util.ArrayList;
 
 public class ServicioPersonas {
@@ -155,6 +156,42 @@ public class ServicioPersonas {
 
     public void borrarNotificacionesPropietario(Propietario propietario) {
         propietario.eliminarNotificaciones();
+    }
+
+    public Propietario getPropietarioPorCi(String ci) {
+        for (Persona persona : personas) {
+            if (persona instanceof Propietario && persona.getCi().equals(ci)) {
+                return (Propietario) persona;
+            }
+        }
+        return null;
+    }
+
+    public void cambiarEstadoPropietario(Persona persona, String estadoPropietario) throws PeajeException {
+        EstadoPropietario getEstadoConcreto = getEstadoPropietarioPorNombre(estadoPropietario);
+        Propietario propietario = (Propietario) persona;
+        try {
+            propietario.setEstado(getEstadoConcreto);
+        } catch (Exception e) {
+            throw new PeajeException(e.getMessage());
+        }
+        //No pasa por el estado de propietario ya que no depende de el
+        propietario.agregarNotificacion(new Notificacion("Se ha cambiado tu estado en el sistema. Tu estado actual es " + propietario.getEstado().getNombre()));
+    }
+
+    private EstadoPropietario getEstadoPropietarioPorNombre(String estadoPropietario) {
+        EstadoPropietario ep = null;
+        switch (estadoPropietario) {
+            case "Habilitado":
+                ep = new Habilitado(); break;
+            case "Deshabilitado":
+                ep = new Deshabilitado(); break;
+            case "Suspendido":
+                ep = new Suspendido(); break;
+            case "Penalizado":
+                ep = new Penalizado(); break;
+        }
+        return ep;
     }
 
 }
