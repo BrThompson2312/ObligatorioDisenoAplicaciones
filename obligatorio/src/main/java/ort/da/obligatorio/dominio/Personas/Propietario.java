@@ -75,6 +75,12 @@ public class Propietario extends Persona {
             throw new Exception("El propietario ya esta en el estado: " + estadoPropietario.getEstado().getNombre());
         }
         this.estado = estadoPropietario;
+
+        estadoPropietario.puedeLogin(this);
+        estadoPropietario.registraTransito(this);
+        estadoPropietario.puedeRecibirBonificacion(this);
+
+        this.avisar(Fachada.Eventos.nuevoEstado);
     }
 
     public void setPuedeLogin(boolean puedeLogin) {
@@ -95,6 +101,7 @@ public class Propietario extends Persona {
 
     public void agregarBonificacion(AsignacionDeBonificacion ab) {
         getListBonificaciones().add(ab);
+        this.avisar(Fachada.Eventos.nuevaBonificacion);
     }
 
     public List<Vehiculo> getListVehiculos() {
@@ -120,6 +127,7 @@ public class Propietario extends Persona {
 
     public void agregarNotificacion(Notificacion n) {
         getListNotificaciones().add(0,n);
+        this.avisar(Fachada.Eventos.nuevaNotificacion);
     }
 
     public void eliminarNotificaciones() {

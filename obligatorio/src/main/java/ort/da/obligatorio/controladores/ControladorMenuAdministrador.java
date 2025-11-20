@@ -187,8 +187,6 @@ public class ControladorMenuAdministrador implements Observador {
     public void actualizar(Object evento, Observable origen) {
         if (evento.equals(Fachada.Eventos.borrarNotificaciones)) {
             conexionNavegador.enviarJSON(Respuesta.lista(new Respuesta("notificaciones", null)));  
-        } else if (evento.equals(Fachada.Eventos.emularTransito)) {
-            
         }
     }
     

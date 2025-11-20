@@ -3,6 +3,7 @@ package ort.da.obligatorio.servicios;
 import java.util.List;
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 import ort.da.obligatorio.dominio.interfaces.EstrategiaBonificacion;
+import ort.da.obligatorio.observador.Observable;
 import ort.da.obligatorio.dominio.Sesion;
 import ort.da.obligatorio.dominio.DTOs.BonificacionDTO;
 import ort.da.obligatorio.dominio.DTOs.EstadoPropietarioDTO;
@@ -17,7 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import ort.da.obligatorio.dominio.Puestos.Transito;
 import java.time.LocalDateTime;
 
-public class Fachada {
+public class Fachada extends Observable {
     
     private static Fachada instance;
     private ServicioPersonas sPersonas;
@@ -25,9 +26,10 @@ public class Fachada {
 
     public enum Eventos {
         nuevaNotificacion, 
-        nuevaBotificacion, 
+        nuevaBonificacion, 
         borrarNotificaciones,
-        emularTransito
+        nuevoTransito,
+        nuevoEstado
     }
 
     private Fachada() {

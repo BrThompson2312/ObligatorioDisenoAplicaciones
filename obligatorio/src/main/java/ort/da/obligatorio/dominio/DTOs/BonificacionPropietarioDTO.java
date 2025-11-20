@@ -8,21 +8,21 @@ import java.util.stream.Collectors;
 public class BonificacionPropietarioDTO {
     private String nombreBonificacion;
     private String nombrePuesto;
-    private LocalDateTime fechaAsignacion;
+    private String fechaAsignacion; // Cambiar de LocalDateTime a String
 
     public BonificacionPropietarioDTO() {
     }
 
-    public BonificacionPropietarioDTO(String nombreBonificacion, String nombrePuesto, LocalDateTime fechaAsignacion) {
+    public BonificacionPropietarioDTO(String nombreBonificacion, String nombrePuesto, String fechaAsignacion) {
         this.nombreBonificacion = nombreBonificacion;
         this.nombrePuesto = nombrePuesto;
-        this.fechaAsignacion = fechaAsignacion;
+        this.fechaAsignacion = fechaAsignacion != null ? fechaAsignacion.toString() : null;
     }
 
     public static BonificacionPropietarioDTO from(AsignacionDeBonificacion asignacion) {
         String nombreBonificacion = asignacion.getEstrategia().getClass().getSimpleName();
         String nombrePuesto = asignacion.getPuesto().getNombre();
-        LocalDateTime fechaAsignacion = asignacion.getFechaAsignacion();
+        String fechaAsignacion = asignacion.getFechaAsignacion().toString();
         
         return new BonificacionPropietarioDTO(nombreBonificacion, nombrePuesto, fechaAsignacion);
     }
@@ -50,11 +50,11 @@ public class BonificacionPropietarioDTO {
         this.nombrePuesto = nombrePuesto;
     }
 
-    public LocalDateTime getFechaAsignacion() {
+    public String getFechaAsignacion() {
         return fechaAsignacion;
     }
 
-    public void setFechaAsignacion(LocalDateTime fechaAsignacion) {
+    public void setFechaAsignacion(String fechaAsignacion) {
         this.fechaAsignacion = fechaAsignacion;
     }
 }

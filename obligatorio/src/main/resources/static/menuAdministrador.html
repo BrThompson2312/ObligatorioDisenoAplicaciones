@@ -207,47 +207,48 @@
         }
 
         function procesarRespuesta(respuesta) {
+            console.log(respuesta)
             console.log("=== PROCESANDO RESPUESTA ===");
-            console.log("Tipo:", respuesta.tipo);
-            console.log("Valor:", respuesta.valor);
+            console.log("Tipo:", respuesta.id);
+            console.log("Valor:", respuesta.Object);
             
-            if (respuesta.tipo === "usuarioNoAutenticado") {
+            if (respuesta.id === "usuarioNoAutenticado") {
                 window.location.href = respuesta.valor;
                 return;
             }
             
-            if (respuesta.tipo === "puestos"){
+            if (respuesta.id === "puestos"){
                 mostrar_puestos(respuesta.valor);
             }
 
-            if (respuesta.tipo === "puestosBonificaciones"){
+            if (respuesta.id === "puestosBonificaciones"){
                 mostrar_puestosBonificaciones(respuesta.valor);
             }
 
-            if (respuesta.tipo === "bonificaciones") {
+            if (respuesta.id === "bonificaciones") {
                 datosRecibidos.bonificaciones = respuesta.valor;
                 mostrar_bonificaciones(respuesta.valor);
             }
 
-            if (respuesta.tipo === "resultadoEmulacion") {
+            if (respuesta.id === "resultadoEmulacion") {
                 console.log("✅ Resultado emulación:", respuesta.valor);
                 mostrar_resultadoEmulacion(respuesta.valor);
             }
 
-            if (respuesta.tipo === "propietarioEncontrado") {
+            if (respuesta.id === "propietarioEncontrado") {
                 console.log("✅ Propietario encontrado:", respuesta.valor);
                 mostrar_propietarioEncontrado(respuesta.valor);
             }
 
-            if (respuesta.tipo === "propietarioEncontradoEstado") {
+            if (respuesta.id === "propietarioEncontradoEstado") {
                 mostrar_propietarioEnEstado(respuesta.valor);
             }
 
-            if (respuesta.tipo === "bonificacionAsignada") {
+            if (respuesta.id === "bonificacionAsignada") {
                 alert(respuesta.valor);
             }
 
-            if (respuesta.tipo === "estadoCambiado") {
+            if (respuesta.id === "estadoCambiado") {
                 alert(respuesta.valor);
             }
         }

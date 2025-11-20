@@ -143,36 +143,36 @@
         }
 
         function procesarRespuesta(respuesta) {
-            if (respuesta.tipo === "usuarioNoAutenticado") {
+            if (respuesta.id === "usuarioNoAutenticado") {
                 window.location.href = respuesta.valor;
                 return;
             }
             
-            if (respuesta.tipo === "nombrePropietario") {
+            if (respuesta.id === "nombrePropietario") {
                 document.getElementById("spnNombrePropietario").textContent = respuesta.valor;
             }
             
-            if (respuesta.tipo === "estadoPropietario") {
+            if (respuesta.id === "estadoPropietario") {
                 document.getElementById("spnEstadoPropietario").textContent = respuesta.valor;
             }
             
-            if (respuesta.tipo === "saldoActual") {
+            if (respuesta.id === "saldoActual") {
                 document.getElementById("spnSaldoActual").textContent = "$ " + respuesta.valor.toFixed(2);
             }
             
-            if (respuesta.tipo === "bonificaciones") {
+            if (respuesta.id === "bonificaciones") {
                 mostrar_bonificaciones(respuesta.valor);
             }
 
-            if (respuesta.tipo === "vehiculos") {
+            if (respuesta.id === "vehiculos") {
                 mostrar_vehiculos(respuesta.valor);
             }
 
-            if (respuesta.tipo === "transitos") {
+            if (respuesta.id === "transitos") {
                 mostrar_transitos(respuesta.valor);
             }
 
-            if (respuesta.tipo === "notificaciones") {
+            if (respuesta.id === "notificaciones") {
                 mostrar_notificaciones(respuesta.valor);
             }
         }

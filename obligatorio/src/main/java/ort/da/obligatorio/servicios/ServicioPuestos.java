@@ -32,12 +32,14 @@ public class ServicioPuestos {
         }
         
         AsignacionDeBonificacion asignacion = propietario.getAsignacionDeBonificacionParaPuesto(puesto);
-        EstrategiaBonificacion estrategia = (asignacion != null) 
-            ? asignacion.getEstrategia() 
-            : null;
+        EstrategiaBonificacion estrategia = null;
+        
+        if (asignacion != null&&propietario.PuedeRecibirBonificacion()) {
+            estrategia = asignacion.getEstrategia();
+        }
         
         double monto;
-        if (estrategia != null&&propietario.PuedeRecibirBonificacion()) {
+        if (estrategia != null) {
             monto = estrategia.calcularMonto(tarifa.getMonto(), puesto, propietario, vehiculo);
         } else {
             monto = tarifa.getMonto();
@@ -60,6 +62,9 @@ public class ServicioPuestos {
         propietario.getEstado().agregarNotificacion(propietario, new Notificacion("Pasaste por el puesto: " + puesto.getNombre() + " con el vehiculo " + vehiculo.getMatricula()));
 
         verificarSaldoBajo(propietario);
+
+        Fachada.getInstancia().avisar(Fachada.Eventos.nuevaNotificacion);
+        Fachada.getInstancia().avisar(Fachada.Eventos.nuevoTransito);
 
         return transito;
     }

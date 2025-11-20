@@ -6,8 +6,12 @@ import java.util.List;
 import ort.da.obligatorio.dominio.Personas.CategoriaDeVehiculo;
 import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.Personas.Vehiculo;
+import ort.da.obligatorio.servicios.Fachada;
 
-public class Puesto {
+import ort.da.obligatorio.observador.Observable;
+
+
+public class Puesto extends Observable {
     
     private String nombre;
     private String direccion;
@@ -31,6 +35,7 @@ public class Puesto {
 
     public void agregarTransito(Transito t) {
         listTransitos.add(t);
+        this.avisar(Fachada.Eventos.nuevoTransito);
     }
     
     public void agregarTarifa(Tarifa ta) {

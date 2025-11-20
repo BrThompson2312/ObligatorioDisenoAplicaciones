@@ -17,7 +17,7 @@ import ort.da.obligatorio.dominio.DTOs.BonificacionPropietarioDTO;
 import ort.da.obligatorio.dominio.DTOs.NotificacionDTO;
 import ort.da.obligatorio.dominio.DTOs.TransitoPropietarioDTO;
 import ort.da.obligatorio.dominio.DTOs.VehiculoDTO;
-
+import ort.da.obligatorio.dominio.DTOs.EstadoPropietarioDTO;
 import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.observador.Observable;
 import ort.da.obligatorio.observador.Observador;
@@ -51,6 +51,8 @@ public class ControladorMenuPropietario implements Observador {
 
         personaObs = (Propietario) sesion.getPersona();
         personaObs.agregar(this);
+
+        Fachada.getInstancia().agregar(this);
         
         Propietario propietario = (Propietario) sesion.getPersona();
 
@@ -77,6 +79,8 @@ public class ControladorMenuPropietario implements Observador {
         );
     }
 
+    
+
     @PostMapping("borrarNotificacionesPropietario")
     public List<Respuesta> borrarNotificaciones(@SessionAttribute(name = "sesion", required = false) Sesion sesion) {
         if(sesion == null) {
@@ -89,11 +93,28 @@ public class ControladorMenuPropietario implements Observador {
 
     @Override
     public void actualizar(Object evento, Observable origen) {
-        if (evento.equals(Fachada.Eventos.borrarNotificaciones)) {
-            conexionNavegador.enviarJSON(Respuesta.lista(new Respuesta("notificaciones", null)));  
-        } else if (evento.equals(Fachada.Eventos.emularTransito)) {
-            
+        if (evento.equals(Fachada.Eventos.borrarNotificaciones) || 
+            evento.equals(Fachada.Eventos.nuevaNotificacion)) {
+            List<NotificacionDTO> notificacionesDTO = 
+                NotificacionDTO.fromList(personaObs.getListNotificaciones());
+            conexionNavegador.enviarJSON(Respuesta.lista(
+                new Respuesta("notificaciones", notificacionesDTO)
+            ));
+        } else if (evento.equals(Fachada.Eventos.nuevoTransito)) {
+            List<TransitoPropietarioDTO> transitosDTO = 
+                Fachada.getInstancia().getTransitosPropietarioDTOs(personaObs);
+            conexionNavegador.enviarJSON(Respuesta.lista(
+                new Respuesta("transitos", transitosDTO)
+            ));
+        } else if (evento.equals(Fachada.Eventos.nuevaBonificacion)) {
+            List<BonificacionPropietarioDTO> BonificacionesPropietarioDTO = 
+                BonificacionPropietarioDTO.fromList(personaObs.getListBonificaciones());
+            conexionNavegador.enviarJSON(Respuesta.lista(
+                new Respuesta("bonificaciones", BonificacionesPropietarioDTO)
+            ));
+        } else if (evento.equals(Fachada.Eventos.nuevoEstado)) {
+            conexionNavegador.enviarJSON(Respuesta.lista(new Respuesta("estadoPropietario", personaObs.getEstado().getNombre())
+            ));
         }
     }
-
 }
