@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Administrador</title>
+    <link rel="stylesheet" href="Peaje.css">
+    <script src="vistaWeb.js"></script>
+</head>
+<body>
+    <script src="utilesVista.js"></script>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-title">Sistema de Peajes - Panel Administrador</div>
+            <div class="navbar-buttons">
+                <button class="nav-btn active" data-vista="emular">Emular Tránsito</button>
+                <button class="nav-btn" data-vista="bonificaciones">Bonificaciones</button>
+                <button class="nav-btn" data-vista="estado">Estado</button>
+                <button class="nav-btn" onclick="logout()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div id="vistaEmular" class="vista active">
+            <div class="container">
+                <h2>Emular Tránsito de Vehículo</h2>
+                
+                <div class="form-group">
+                    <label for="selectPuesto">Seleccionar Puesto:</label>
+                    <select id="selectPuesto">
+                        <option value="">Cargando puestos...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputMatricula">Matrícula del Vehículo:</label>
+                    <input type="text" id="inputMatricula" placeholder="Ej: ABC1234">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputFecha">Fecha y Hora:</label>
+                    <input type="datetime-local" id="inputFecha">
+                </div>
+
+                <div class="form-group" style="align-items: center;">
+                    <button type="button" class="btn-primary" onclick="emularTransito()">Emular Tránsito</button>
+                </div>
+
+                <div id="listaTarifas" class="tarifas-container"></div>
+
+                <div id="resultadoEmulacion" class="resultado-container"></div>
+            </div>
+        </div>
+
+        <div id="vistaBonificaciones" class="vista">
+            <div class="bonificaciones-layout">
+                <!-- Panel Izquierdo -->
+                <div class="bonificaciones-panel-left">
+                    <h2>📋 Asignar bonificaciones</h2>
+                    
+                    <!-- Bonificaciones definidas -->
+                    <div class="form-group">
+                        <label for="selectBonificacion">Bonificaciones definidas</label>
+                        <select id="selectBonificacion">
+                            <option value="">Cargando bonificaciones...</option>
+                        </select>
+                    </div>
+
+                    <!-- Puestos definidos -->
+                    <div class="form-group">
+                        <label for="selectPuestoBonif">Puestos definidos</label>
+                        <select id="selectPuestoBonif">
+                            <option value="">Cargando puestos...</option>
+                        </select>
+                    </div>
+
+                    <!-- Botón Buscar -->
+                    <button class="btn-primary" onclick="buscarPropietario()">
+                        🔍 Buscar propietario
+                    </button>
+                </div>
+
+                <!-- Panel Derecho -->
+                <div class="bonificaciones-panel-right">
+                    <h3>Cédlula de identidad</h3>
+                    <input type="text" id="inputCedula" placeholder="12345678" class="input-cedula">
+
+                    <div id="infoPropietario" class="propietario-card" style="display: none;">
+                        <div class="propietario-header">
+                            <h4>Propietario</h4>
+                        </div>
+                        <div class="propietario-info">
+                            <div class="info-item">
+                                <span class="label">Nombre:</span>
+                                <span id="nombreProp" class="value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Estado:</span>
+                                <span id="estadoProp" class="value estado-activo">Activo</span>
+                            </div>
+                        </div>
+
+                        <h4 class="section-subtitle">Bonificaciones asignadas</h4>
+                        <div id="listaBonificaciones" class="bonificaciones-list">
+                            <p class="empty-message">Sin bonificaciones asignadas</p>
+                        </div>
+
+                        <button class="btn-assign" onclick="asignarBonificacion()">
+                            ➕ Asignar nueva bonificación
+                        </button>
+                        <p class="help-text">
+                            Seleccione bonificación y puesto en las listas de la izquierda y luego asigne.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="vistaEstado" class="vista">
+            <div class="container">
+                <h2>Estado del Sistema</h2>
+                <p>Aquí se mostrará el estado general del sistema de peajes.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        urlIniciarVista="/menuAdministrador/vistaConectadaAdministrador";
+
+        const datosRecibidos = {
+            puestos: null,
+            bonificaciones: null
+        };
+
+        function cambiarVista(vista) {
+            document.querySelectorAll('.vista').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            const vistas = {
+                'emular': 'vistaEmular',
+                'bonificaciones': 'vistaBonificaciones',
+                'estado': 'vistaEstado'
+            };
+            
+            document.getElementById(vistas[vista]).classList.add('active');
+        }
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if(this.getAttribute('onclick')) return;
+                const vista = this.getAttribute('data-vista');
+                if(vista) {
+                    this.classList.add('active');
+                    cambiarVista(vista);
+                }
+            });
+        });
+
+        function logout() {
+            submit("acceso/logoutAdministrador", null)  
+        }
+
+        function mostrar_usuarioNoAutenticado(urlDestino){
+            window.location.href = urlDestino;
+        }
+
+        function procesarRespuesta(respuesta) {
+            console.log("=== PROCESANDO RESPUESTA ===");
+            console.log("Tipo:", respuesta.tipo);
+            console.log("Valor:", respuesta.valor);
+            
+            if (respuesta.tipo === "usuarioNoAutenticado") {
+                window.location.href = respuesta.valor;
+                return;
+            }
+            
+            if (respuesta.tipo === "puestos"){
+                console.log("aaaaaaaaaaaaaaaaaa");
+                mostrar_puestos(respuesta.valor);
+            }
+
+            if (respuesta.tipo === "puestos"){
+                console.log("bbbbbbbbbbbbbbbbbb");
+                mostrar_puestosBonificaciones(respuesta.valor);
+            }
+
+            if (respuesta.tipo === "bonificaciones") {
+                console.log("✅ Bonificaciones recibidas:", respuesta.valor);
+                console.log("Cantidad:", respuesta.valor.length);
+                datosRecibidos.bonificaciones = respuesta.valor;
+                mostrar_bonificaciones(respuesta.valor);
+            }
+
+            if (respuesta.tipo === "resultadoEmulacion") {
+                console.log("✅ Resultado emulación:", respuesta.valor);
+                mostrar_resultadoEmulacion(respuesta.valor);
+            }      
+
+            console.log("=== ESTADO ACTUAL ===");
+            console.log("Puestos guardados:", datosRecibidos.puestos);
+            console.log("Bonificaciones guardadas:", datosRecibidos.bonificaciones);
+        }
+
+        function mostrar_bonificaciones(bonificaciones) {
+            const select = document.getElementById('selectBonificacion');
+
+            if (!select) {
+                console.error("No se encontró el select de bonificaciones");
+                return;
+            }
+            
+            select.innerHTML = '<option value="">Seleccione una bonificación</option>';
+            
+            if (!bonificaciones || bonificaciones.length === 0) {
+                select.innerHTML = '<option value="">No hay bonificaciones disponibles</option>';
+                return;
+            }
+            
+            bonificaciones.forEach((bonificacion, index) => {
+                const option = document.createElement('option');
+                option.value = bonificacion.nombre;
+                option.textContent = bonificacion.nombre;
+                option.dataset.bonificacion = JSON.stringify(bonificacion);
+                select.appendChild(option);
+            });
+        }
+
+        function mostrar_puestosBonificaciones(puestos) {
+            console.log("🔍 === INICIO mostrar_puestosBonificaciones ===");
+            console.log("📦 Puestos recibidos:", puestos);
+            console.log("📦 ¿Es array?:", Array.isArray(puestos));
+            console.log("📦 Cantidad:", puestos ? puestos.length : 'NULL');
+            
+            const select = document.getElementById('selectPuestoBonif');
+            
+            console.log("🎯 Select encontrado:", select);
+            console.log("🎯 Select existe:", !!select);
+            console.log("🎯 ID del select:", select ? select.id : 'NO EXISTE');
+            console.log("🎯 HTML ANTES:", select ? select.innerHTML : 'NO EXISTE');
+            
+            if (!select) {
+                console.error("❌ NO SE ENCONTRÓ selectPuestoBonif");
+                console.log("Todos los selects en el DOM:", document.querySelectorAll('select'));
+                return;
+            }
+            
+            console.log("🧹 Limpiando select...");
+            select.innerHTML = '<option value="">Seleccione un puesto</option>';
+            console.log("🧹 HTML DESPUÉS DE LIMPIAR:", select.innerHTML);
+            
+            if (!puestos || puestos.length === 0) {
+                console.warn("⚠️ NO HAY PUESTOS");
+                select.innerHTML = '<option value="">No hay puestos disponibles</option>';
+                return;
+            }
+            
+            console.log("➕ Agregando opciones...");
+            puestos.forEach((puesto, index) => {
+                console.log(`  ➕ Agregando puesto ${index}:`, puesto.nombre);
+                const option = document.createElement('option');
+                option.value = puesto.nombre;
+                option.textContent = puesto.nombre;
+                option.dataset.puesto = JSON.stringify(puesto);
+                select.appendChild(option);
+                console.log(`  ✅ Opción agregada. Select ahora tiene ${select.options.length} opciones`);
+            });
+            
+            console.log("🎯 HTML FINAL:", select.innerHTML);
+            console.log("🎯 Cantidad final de opciones:", select.options.length);
+            console.log("🎯 Opciones:", Array.from(select.options).map(o => o.textContent));
+            console.log("✅ === FIN mostrar_puestosBonificaciones ===");
+        }
+        
+        function mostrar_puestos(puestos) {
+            console.log("🔍 === INICIO mostrar_puestos ===");
+            const select = document.getElementById('selectPuesto');
+            
+            if (!select) {
+                console.error("No se encontró el select de puestos");
+                return;
+            }
+            
+            select.innerHTML = '<option value="">Seleccione un puesto</option>';
+            
+            if (!puestos || puestos.length === 0) {
+                select.innerHTML = '<option value="">No hay puestos disponibles</option>';
+                return;
+            }
+            
+            puestos.forEach((puesto, index) => {
+                const option = document.createElement('option');
+                option.value = puesto.nombre;
+                option.textContent = puesto.nombre;
+                option.dataset.puesto = JSON.stringify(puesto);
+                select.appendChild(option);
+            });
+            console.log("✅ === FIN mostrar_puestos ===");
+        }
+
+        function obtenerPuestoSeleccionado() {
+            const select = document.getElementById('selectPuesto');
+            if (!select || select.selectedIndex <= 0) return null;
+            
+            const option = select.options[select.selectedIndex];
+            if (option && option.dataset.puesto) {
+                return JSON.parse(option.dataset.puesto);
+            }
+            return null;
+        }
+
+        function cargarTarifasPuesto(puesto) {
+            const listaTarifas = document.getElementById('listaTarifas');
+            listaTarifas.innerHTML = '';
+            
+            if (!puesto.tarifas || puesto.tarifas.length === 0) {
+                listaTarifas.innerHTML = '<p style="text-align: center; color: #666;">No hay tarifas definidas</p>';
+                return;
+            }
+            
+            const titulo = document.createElement('h3');
+            titulo.textContent = 'Tarifas - ' + puesto.nombre;
+            listaTarifas.appendChild(titulo);
+            
+            puesto.tarifas.forEach(tarifa => {
+                const div = document.createElement('div');
+                div.className = 'tarifa-item';
+                div.innerHTML = `
+                    <span><strong>${tarifa.categoriaDeVehiculo.nombre}</strong></span>
+                    <span class="tarifa-monto">$ ${tarifa.monto.toFixed(2)}</span>
+                `;
+                listaTarifas.appendChild(div);
+            });
+        }
+
+        function emularTransito() {
+            console.log('=== INICIO emularTransito ===');
+            
+            try {
+                const puesto = obtenerPuestoSeleccionado();
+                const matricula = document.getElementById('inputMatricula').value.trim();
+                const fecha = document.getElementById('inputFecha').value;
+                if (!puesto) {
+                    alert('Por favor seleccione un puesto');
+                    return;
+                }
+                
+                if (!matricula) {
+                    alert('Por favor ingrese una matrícula');
+                    return;
+                }
+
+                if (!fecha) {
+                    alert('Por favor seleccione una fecha y hora');
+                    return;
+                }
+                
+                const params = new URLSearchParams();
+                params.append('puesto', puesto.nombre);
+                params.append('matricula', matricula);
+                params.append('fecha', fecha);
+                
+                submit("menuAdministrador/emularTransito", params.toString());
+                
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        function mostrar_resultadoEmulacion(datos) {
+            const contenedor = document.getElementById('resultadoEmulacion');
+            
+            if (!datos) {
+                contenedor.innerHTML = '<p class="error">No se recibieron datos del tránsito</p>';
+                return;
+            }
+            
+            contenedor.innerHTML = `
+                <div class="resultado-exito">
+                    <h3>✓ Tránsito Registrado Exitosamente</h3>
+                    <div class="resultado-detalles">
+                        <div class="resultado-item">
+                            <strong>Propietario:</strong> ${datos.nombrePropietario}
+                        </div>
+                        <div class="resultado-item">
+                            <strong>Categoría:</strong> ${datos.categoria}
+                        </div>
+                        <div class="resultado-item">
+                            <strong>Bonificación:</strong> ${datos.bonificacion}
+                        </div>
+                        <div class="resultado-item">
+                            <strong>Costo del Tránsito:</strong> $${datos.costoTransito.toFixed(2)}
+                        </div>
+                        <div class="resultado-item">
+                            <strong>Saldo Después:</strong> $${datos.saldoDespues.toFixed(2)}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('inputMatricula').value = '';
+            document.getElementById('inputFecha').value = '';
+            
+            contenedor.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("=== DOM CARGADO ===");
+            
+            // Verificar elementos
+            console.log("Verificando selects:");
+            console.log("- selectPuesto:", document.getElementById('selectPuesto'));
+            console.log("- selectBonificacion:", document.getElementById('selectBonificacion'));
+            console.log("- selectPuestoBonif:", document.getElementById('selectPuestoBonif'));
+            
+            cambiarVista('emular');
+            
+            const selectPuesto = document.getElementById('selectPuesto');
+            if (selectPuesto) {
+                selectPuesto.addEventListener('change', function() {
+                    const puestoSeleccionado = obtenerPuestoSeleccionado();
+                    if (puestoSeleccionado) {
+                        cargarTarifasPuesto(puestoSeleccionado);
+                    } else {
+                        document.getElementById('listaTarifas').innerHTML = '';
+                    }
+                });
+            }
+            
+            console.log("✅ Inicialización completada");
+        });
+        
+    </script>
+</body>
+</html>
