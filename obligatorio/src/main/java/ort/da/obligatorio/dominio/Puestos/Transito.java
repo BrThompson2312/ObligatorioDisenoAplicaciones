@@ -1,54 +1,36 @@
 package ort.da.obligatorio.dominio.Puestos;
 
-import java.util.Date;
-
+import java.time.LocalDateTime;
 import ort.da.obligatorio.dominio.Personas.Propietario;
+import ort.da.obligatorio.dominio.Personas.Vehiculo;
+import ort.da.obligatorio.dominio.interfaces.EstrategiaBonificacion;
 
 public class Transito {
     
+    private Puesto puesto;
     private Propietario propietario;
-    private String puesto;
-    private double tarifa;
-    private Date fecha; 
+    private Vehiculo vehiculo;
+    private Tarifa tarifa;
+    private EstrategiaBonificacion bonificacionAplicada;
+    private double montoCobrado;
+    private LocalDateTime fecha;
 
-    public Transito(int id, Propietario propietario, String puesto, double tarifa, Date fecha) {
+    public Transito(Propietario propietario, Vehiculo vehiculo, Puesto puesto, 
+                    Tarifa tarifa, EstrategiaBonificacion bonificacion, double montoCobrado) {
         this.propietario = propietario;
+        this.vehiculo = vehiculo;
         this.puesto = puesto;
         this.tarifa = tarifa;
-        this.fecha = fecha;
+        this.bonificacionAplicada = bonificacion;
+        this.montoCobrado = montoCobrado;
+        this.fecha = LocalDateTime.now();
     }
 
-    public Propietario getPropietario() {
-        return propietario;
-    }
-
-    public void setPropietario(Propietario propietario) {
-        this.propietario = propietario;
-    }
-
-    public String getPuesto() {
-        return puesto;
-    }
-
-    public void setPuesto(String puesto) {
-        this.puesto = puesto;
-    }
-
-    public double getTarifa() {
-        return tarifa;
-    }
-
-    public void setTarifa(double tarifa) {
-        this.tarifa = tarifa;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-   
+    public Puesto getPuesto() { return puesto; }
+    public Propietario getPropietario() { return propietario; }
+    public Vehiculo getVehiculo() { return vehiculo; }
+    public Tarifa getTarifa() { return tarifa; }
+    public EstrategiaBonificacion getBonificacionAplicada() { return bonificacionAplicada; }
+    public double getMontoCobrado() { return montoCobrado; }
+    public LocalDateTime getFecha() { return fecha; }
 }

@@ -4,20 +4,20 @@ import ort.da.obligatorio.dominio.Puestos.Tarifa;
 
 public class CategoriaDeVehiculo {
     
-    private String nombre;
-    public Tarifa tarifa;
+    public enum TipoVehiculo {
+        AUTO,
+        MOTO,
+        CAMION,
+        CAMIONETA
+    }
+
+    private TipoVehiculo nombre;
     
-    public CategoriaDeVehiculo(String nombre, Tarifa tarifa) {
+    public CategoriaDeVehiculo(TipoVehiculo nombre) {
         this.nombre = nombre;
-        this.tarifa = tarifa;
     }
 
-    public void getMonto() {
-
+    public TipoVehiculo getNombre() {
+        return nombre;
     }
-
-    public void getCategoriaVehiculo() {
-        
-    }
-    
 }

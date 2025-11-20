@@ -9,7 +9,9 @@ import ort.da.obligatorio.dominio.Personas.Persona;
 import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.Puestos.Puesto;
 import ort.da.obligatorio.dominio.Excepciones.PeajeException;
+import ort.da.obligatorio.dominio.Personas.Vehiculo;
 import jakarta.servlet.http.HttpSession;
+import ort.da.obligatorio.dominio.Puestos.Transito;
 
 public class Fachada {
     
@@ -67,8 +69,8 @@ public class Fachada {
 
     }
 
-    public void emularTransito(List<Puesto> listPuestos, List<Persona> propietarios) {
-
+    public void emularTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws PeajeException {
+        sPuestos.registrarTransito(propietario, vehiculo, puesto);
     }
 
     public void CambioEstadoPropietarios(List<Persona> propietarios, List<EstadoPropietario> estadoPropietarios) {
@@ -91,4 +93,7 @@ public class Fachada {
         sPuestos.agregarPuesto(p);
     }
 
+    public List<Transito> getTransitosPorPropietario(Propietario propietario){
+        return sPuestos.getTransitosPorPropietario(propietario);
+    }
 }

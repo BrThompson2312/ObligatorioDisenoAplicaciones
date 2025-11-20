@@ -14,7 +14,7 @@ public interface EstadoPropietario {
 
     void agregarBonificacion(Propietario p, AsignacionDeBonificacion ab) throws PeajeException;
 
-    String registraTransito();
+    void registraTransito(Propietario p);
 
     EstadoPropietarioAbstracto getEstado();
     

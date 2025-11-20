@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.Puestos.Puesto;
+import ort.da.obligatorio.dominio.Personas.Vehiculo;
 
 public class AsignacionDeBonificacion {
     
@@ -20,8 +21,8 @@ public class AsignacionDeBonificacion {
         this.fechaAsignacion = LocalDateTime.now();
     }
 
-    public double calcularMonto(double monto, Puesto puesto) {
-        return eBonificacion.calcularMonto(monto, puesto);
+    public double calcularMonto(double monto, Puesto puesto, Propietario propietario, Vehiculo vehiculo) {
+        return eBonificacion.calcularMonto(monto, puesto, propietario, vehiculo);
     }
 
     public Puesto getPuesto() { 

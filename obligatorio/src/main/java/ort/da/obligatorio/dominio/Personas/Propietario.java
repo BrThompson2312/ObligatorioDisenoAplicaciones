@@ -1,10 +1,11 @@
 package ort.da.obligatorio.dominio.Personas;
 import ort.da.obligatorio.dominio.Bonificaciones.AsignacionDeBonificacion;
 import ort.da.obligatorio.dominio.EstadosPropietario.EstadoPropietarioAbstracto;
-
 import java.util.ArrayList;
 import java.util.List;
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
+import ort.da.obligatorio.dominio.Puestos.Puesto;
+
 
 public class Propietario extends Persona{
     
@@ -26,7 +27,7 @@ public class Propietario extends Persona{
         this.listVehiculos = new ArrayList<>();
         this.listNotificacions = new ArrayList<>();
         estado.puedeLogin(this);
-    
+        estado.registraTransito(this);
     }
 
     public EstadoPropietarioAbstracto getEstado() {
@@ -73,5 +74,32 @@ public class Propietario extends Persona{
         getListBonificaciones().add(ab);
     }
 
+    public List<Vehiculo> getListVehiculos() {
+        return listVehiculos;
+    }
 
+    public void agregarVehiculo(Vehiculo v) {
+        getListVehiculos().add(v);
+    }
+
+    public List<Notificacion> getListNotificaciones() {
+        return listNotificacions;
+    }
+
+    public AsignacionDeBonificacion getAsignacionDeBonificacionParaPuesto(Puesto puesto) {
+        for (AsignacionDeBonificacion ab : listBonificaciones) {
+            if(ab.getPuesto().equals(puesto)) {
+                return ab;
+            }
+        }
+        return null;
+    }
+
+    public void agregarNotificacion(Notificacion n) {
+        getListNotificaciones().add(0,n);
+    }
+
+    public void eliminarNotifiaciones() {
+        getListNotificaciones().clear();
+    }
 }
