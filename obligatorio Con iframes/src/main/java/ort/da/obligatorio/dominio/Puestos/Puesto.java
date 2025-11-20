@@ -31,6 +31,8 @@ public class Puesto {
 
     public void agregarTransito(Transito t) {
         listTransitos.add(t);
+        System.out.println("Transito agregado:");
+        System.out.println(listTransitos);
     }
     
     public void agregarTarifa(Tarifa ta) {

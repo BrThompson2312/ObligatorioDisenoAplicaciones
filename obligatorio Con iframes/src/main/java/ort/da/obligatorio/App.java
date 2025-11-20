@@ -96,8 +96,6 @@ public class App {
 			p1.agregarVehiculo(v2);
 			p1.agregarVehiculo(v3);
 		
-		
-
 		Propietario p2 = new Propietario("34567890", "123", "Usuario Propietario 2", 1500, 300, estadoDeshabilitado);
 		Fachada.getInstancia().agregarPersona(p1);
 		Fachada.getInstancia().agregarPersona(p2);

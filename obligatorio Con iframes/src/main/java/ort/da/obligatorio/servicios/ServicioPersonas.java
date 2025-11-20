@@ -9,6 +9,7 @@ import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 import ort.da.obligatorio.dominio.interfaces.EstrategiaBonificacion;
 import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 import jakarta.servlet.http.HttpSession;
+import ort.da.obligatorio.dominio.Personas.Vehiculo;
 
 
 
@@ -124,6 +125,36 @@ public class ServicioPersonas {
             throw new PeajeException("Ya tiene una bonifiacion asignada para este puesto");
         }
         propietario.getEstado().agregarBonificacion(propietario, ab);
+    }
+
+    public Vehiculo getVehiculoPorMatricula(String matricula) throws PeajeException {
+        for (Persona persona : personas) {
+            if (persona instanceof Propietario) {
+                Propietario propietario = (Propietario) persona;
+                for (Vehiculo vehiculo : propietario.getListVehiculos()) {
+                    if (vehiculo.getMatricula().equals(matricula)) {
+                        return vehiculo;
+                    }
+                }
+            }
+        }
+        throw new PeajeException("No existe el vehiculo");
+    }
+
+    public Propietario getPropietarioPorVehiculo(Vehiculo vehiculo) {
+        for (Persona persona : personas) {
+            if (persona instanceof Propietario) {
+                Propietario propietario = (Propietario) persona;
+                if (propietario.getListVehiculos().contains(vehiculo)) {
+                    return propietario;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void borrarNotificacionesPropietario(Propietario propietario) {
+        propietario.eliminarNotificaciones();
     }
 
 }

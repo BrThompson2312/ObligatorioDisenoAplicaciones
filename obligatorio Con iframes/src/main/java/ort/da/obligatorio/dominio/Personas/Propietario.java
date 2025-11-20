@@ -99,7 +99,7 @@ public class Propietario extends Persona{
         getListNotificaciones().add(0,n);
     }
 
-    public void eliminarNotifiaciones() {
+    public void eliminarNotificaciones() {
         getListNotificaciones().clear();
     }
 }

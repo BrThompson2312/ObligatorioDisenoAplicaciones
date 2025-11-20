@@ -12,6 +12,7 @@ import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 import ort.da.obligatorio.dominio.Personas.Vehiculo;
 import jakarta.servlet.http.HttpSession;
 import ort.da.obligatorio.dominio.Puestos.Transito;
+import java.time.LocalDateTime;
 
 public class Fachada {
     
@@ -35,14 +36,12 @@ public class Fachada {
         return sPersonas.getSesiones();
     }
 
-    public void precarga() {}
-
     public List<Persona> getPersonas() {
-        return null;
+        return sPersonas.getPersonas();
     }
 
     public List<Puesto> getPuestos() {
-        return null;
+        return sPuestos.getListPuestos();
     }
 
     public Sesion loginAdministrador(String ci, String c, HttpSession httpSession) throws PeajeException{
@@ -57,20 +56,24 @@ public class Fachada {
         sPersonas.logout(s);
     }
 
-    public void menuAsignarBonificacion(List<EstrategiaBonificacion> listBonificaciones, List<Puesto> listPuestos) {
-
-    }
-
     public void asignarBonificacion(EstrategiaBonificacion eb, Puesto p, Propietario propietario) throws PeajeException{
         sPersonas.asignarBonificacion(eb, p, propietario);
     }
 
-    public void menuAdministrador() {
-
+    public Transito emularTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws PeajeException {
+        return sPuestos.registrarTransito(propietario, vehiculo, puesto);
     }
 
-    public void emularTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws PeajeException {
-        sPuestos.registrarTransito(propietario, vehiculo, puesto);
+    public Transito emularTransitoInicial(String puesto, String matricula, LocalDateTime fechaHora) throws PeajeException { 
+        Puesto p = sPuestos.getPuestoPorNombre(puesto);
+        Vehiculo v = sPersonas.getVehiculoPorMatricula(matricula);
+        Propietario propietario = sPersonas.getPropietarioPorVehiculo(v);
+
+        return emularTransito(propietario, p, v);
+    }
+
+    public void borrarNotificacionesPropietario(Propietario propietario) {
+        sPersonas.borrarNotificacionesPropietario(propietario);
     }
 
     public void CambioEstadoPropietarios(List<Persona> propietarios, List<EstadoPropietario> estadoPropietarios) {

@@ -36,4 +36,9 @@ public class AsignacionDeBonificacion {
     public LocalDateTime getFechaAsignacion() {
         return fechaAsignacion;
     }
+
+    public Propietario getPropietario() {
+        return propietario;
+    }
+
 }

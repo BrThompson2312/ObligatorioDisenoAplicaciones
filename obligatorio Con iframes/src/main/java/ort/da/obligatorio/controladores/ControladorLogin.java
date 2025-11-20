@@ -41,7 +41,6 @@ public class ControladorLogin {
         Sesion sesion = (Sesion) sesionHttp.getAttribute("sesion");
         if(sesion != null) {
             Fachada.getInstancia().logout(sesion);
-            //sesionHttp.removeAttribute("sesion");
         }
         return Respuesta.lista(new Respuesta("usuarioNoAutenticado","index.html"));
     }
@@ -51,7 +50,6 @@ public class ControladorLogin {
         Sesion sesion = (Sesion) sesionHttp.getAttribute("sesion");
         if(sesion != null) {
             Fachada.getInstancia().logout(sesion);
-            //sesionHttp.removeAttribute("sesion");
         }
         return Respuesta.lista(new Respuesta("usuarioNoAutenticado","index.html"));
     }

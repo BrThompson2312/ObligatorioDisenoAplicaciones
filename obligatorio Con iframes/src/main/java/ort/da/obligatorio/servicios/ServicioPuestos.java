@@ -26,6 +26,10 @@ public class ServicioPuestos {
     
     public Transito registrarTransito(Propietario propietario, Vehiculo vehiculo, Puesto puesto) throws PeajeException {
         
+        System.out.println(propietario);
+        System.out.println(vehiculo);
+        System.out.println(puesto);
+
         Tarifa tarifa = puesto.getTarifaPorCategoria(vehiculo.getCategoriaDeVehiculo());
         if (tarifa == null) {
             throw new PeajeException("No existe tarifa para la categoría: " 
@@ -99,5 +103,14 @@ public class ServicioPuestos {
             }
         }
         return transitosPropietario;
+    }
+
+    public Puesto getPuestoPorNombre(String nombre) {
+        for (Puesto puesto : listPuestos) {
+            if (puesto.getNombre().equals(nombre)) {
+                return puesto;
+            }
+        }
+        return null;
     }
 }

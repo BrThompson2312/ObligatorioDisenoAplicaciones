@@ -112,7 +112,8 @@ public class ControladorMenuPropietario {
                               new Respuesta("bonificaciones", bonificacionesData),
                               new Respuesta("vehiculos", vehiculosData),
                               new Respuesta("transitos", transitosData),
-                              new Respuesta("notificaciones", notificacionesData));
+                              new Respuesta("notificaciones", notificacionesData)
+                            );
     }
 
         @PostMapping("borrarNotificacionesPropietario")
@@ -122,7 +123,7 @@ public class ControladorMenuPropietario {
             }
             
             Propietario propietario = (Propietario) sesion.getPersona();
-            propietario.eliminarNotifiaciones();
+            Fachada.getInstancia().borrarNotificacionesPropietario(propietario);
             
             return iniciarVista(sesion);
         }
