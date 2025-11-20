@@ -6,6 +6,7 @@
     <title>Tablero de Control del Propietario</title>
     <link rel="stylesheet" href="peaje.css">
     <script src="vistaWeb.js"></script>
+    <script src="sse.js"></script>
 </head>
 <body class="dashboard">
     <script src="utilesVista.js"></script>
@@ -111,6 +112,8 @@
 
     <script>
         urlIniciarVista="/menuPropietario/vistaConectadaPropietario";
+        urlRegistroSSE = "/menuPropietario/registrarSSE";
+
         const spnNombrePropietario = document.getElementById("spnNombrePropietario");
         const spnEstadoPropietario = document.getElementById("spnEstadoPropietario");
         const spnSaldoActual = document.getElementById("spnSaldoActual");
@@ -185,9 +188,16 @@
             
             bonificaciones.forEach(bonif => {
                 const row = tbody.insertRow();
-                row.insertCell(0).textContent = bonif.tipo;
-                row.insertCell(1).textContent = bonif.puesto;
-                row.insertCell(2).textContent = bonif.fechaAsignacion.split('T')[0];
+                row.insertCell(0).textContent = bonif.nombreBonificacion || "N/A";
+                row.insertCell(1).textContent = bonif.nombrePuesto || "N/A";
+                
+                // Formatear fecha
+                if (bonif.fechaAsignacion) {
+                    const fecha = bonif.fechaAsignacion.split('T')[0];
+                    row.insertCell(2).textContent = fecha;
+                } else {
+                    row.insertCell(2).textContent = "N/A";
+                }
             });
         }
 
@@ -226,7 +236,7 @@
                 row.insertCell(2).textContent = tran.categoria || "N/A";
                 row.insertCell(3).textContent = tran.montoTarifa != null ? "$ " + tran.montoTarifa.toFixed(2) : "N/A";
                 row.insertCell(4).textContent = tran.bonificacion || "N/A";
-                row.insertCell(5).textContent = (tran.montoTarifa != null && tran.montoPagado != null) ? "$ " + (tran.montoTarifa - tran.montoPagado).toFixed(2) : "N/A";
+                row.insertCell(5).textContent = tran.montoBonificacion != null ? "$ " + tran.montoBonificacion.toFixed(2) : "N/A";
                 row.insertCell(6).textContent = tran.montoPagado != null ? "$ " + tran.montoPagado.toFixed(2) : "N/A";
                 row.insertCell(7).textContent = tran.fecha || "N/A";
                 row.insertCell(8).textContent = tran.hora ? tran.hora.substring(0, 8) : "N/A";

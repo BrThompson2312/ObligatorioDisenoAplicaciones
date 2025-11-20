@@ -1,5 +1,5 @@
 package ort.da.obligatorio.observador;
 
 public interface Observador {
-    void actualizar(Observable origen, Object evento);
+    void actualizar(Object evento, Observable origen);
 }

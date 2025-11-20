@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 import ort.da.obligatorio.dominio.Puestos.Puesto;
+import ort.da.obligatorio.servicios.Fachada;
 
-public class Propietario extends Persona{
+public class Propietario extends Persona {
     
     private double saldoActual;
     private double saldoMinimo;
@@ -17,6 +18,12 @@ public class Propietario extends Persona{
     private boolean puedeLogin;
     private boolean puedeTransitar;
     private boolean puedeRecibirBonificacion;
+
+    enum Eventos {
+        nuevaNotificacion, 
+        nuevaBotificacion, 
+        borrarNotificaciones
+    }
 
     public Propietario(String ci, String password, String nombre, double saldoActual, double saldoMinimo, EstadoPropietario estado) {
         super(ci, password, nombre);
@@ -117,6 +124,7 @@ public class Propietario extends Persona{
 
     public void eliminarNotificaciones() {
         getListNotificaciones().clear();
+        this.avisar(Fachada.Eventos.borrarNotificaciones);
     }
 
 }

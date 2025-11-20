@@ -1,12 +1,13 @@
 package ort.da.obligatorio.servicios;
 
 import java.util.List;
-
 import ort.da.obligatorio.dominio.interfaces.EstadoPropietario;
 import ort.da.obligatorio.dominio.interfaces.EstrategiaBonificacion;
 import ort.da.obligatorio.dominio.Sesion;
 import ort.da.obligatorio.dominio.DTOs.BonificacionDTO;
 import ort.da.obligatorio.dominio.DTOs.EstadoPropietarioDTO;
+import ort.da.obligatorio.dominio.DTOs.TransitoAdminDTO;
+import ort.da.obligatorio.dominio.DTOs.TransitoPropietarioDTO;
 import ort.da.obligatorio.dominio.Personas.Persona;
 import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.Puestos.Puesto;
@@ -21,6 +22,13 @@ public class Fachada {
     private static Fachada instance;
     private ServicioPersonas sPersonas;
     private ServicioPuestos sPuestos;
+
+    public enum Eventos {
+        nuevaNotificacion, 
+        nuevaBotificacion, 
+        borrarNotificaciones,
+        emularTransito
+    }
 
     private Fachada() {
         sPersonas = new ServicioPersonas();
@@ -52,6 +60,11 @@ public class Fachada {
 
     public List<Puesto> getPuestos() {
         return sPuestos.getListPuestos();
+    }
+
+    public List<TransitoPropietarioDTO> getTransitosPropietarioDTOs(Propietario propietario){
+        List<Transito> transitos = sPuestos.getTransitosPorPropietario(propietario);
+        return TransitoPropietarioDTO.fromList(transitos);
     }
 
     public List<BonificacionDTO> getBonificacionesDTOs(){
@@ -96,7 +109,7 @@ public class Fachada {
     public void asignarBonificacion(EstrategiaBonificacion eb, Puesto p, Propietario propietario) throws PeajeException{
         sPersonas.asignarBonificacion(eb, p, propietario);
     }
-
+    
     public Transito emularTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws PeajeException {
         return sPuestos.registrarTransito(propietario, vehiculo, puesto);
     }
@@ -107,6 +120,11 @@ public class Fachada {
         Propietario propietario = sPersonas.getPropietarioPorVehiculo(v);
 
         return emularTransito(propietario, p, v);
+    }
+
+    public TransitoAdminDTO emularTransitoDTO(String puesto, String matricula, LocalDateTime fechaHora) throws PeajeException {
+        Transito transito = emularTransitoInicial(puesto, matricula, fechaHora);
+        return TransitoAdminDTO.from(transito);
     }
 
     public void borrarNotificacionesPropietario(Propietario propietario) {

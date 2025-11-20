@@ -1,9 +1,7 @@
 package ort.da.obligatorio.controladores;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,29 +13,49 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import ort.da.obligatorio.dominio.Sesion;
 import ort.da.obligatorio.dominio.DTOs.PuestoDTO;
+import ort.da.obligatorio.dominio.DTOs.TransitoAdminDTO;
 import ort.da.obligatorio.dominio.Excepciones.PeajeException;
 import ort.da.obligatorio.dominio.Personas.Propietario;
 import ort.da.obligatorio.dominio.Puestos.Puesto;
-import ort.da.obligatorio.dominio.Puestos.Transito;
 import ort.da.obligatorio.servicios.Fachada;
 import ort.da.obligatorio.utils.Respuesta;
 import ort.da.obligatorio.dominio.DTOs.BonificacionDTO;
 import ort.da.obligatorio.dominio.DTOs.PropietarioDTO;
 import ort.da.obligatorio.dominio.DTOs.EstadoPropietarioDTO;
-import org.springframework.web.bind.annotation.RequestBody;
-
-
+import ort.da.obligatorio.observador.Observador;
+import ort.da.obligatorio.observador.Observable;
+import ort.da.obligatorio.utils.ConexionNavegador;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import ort.da.obligatorio.dominio.Personas.Administrador;
 
 @RestController
 @RequestMapping("/menuAdministrador")
 @Scope("session")
-public class ControladorMenuAdministrador {
+public class ControladorMenuAdministrador implements Observador {
+
+    private Administrador personaObs;
+    private final ConexionNavegador conexionNavegador;
+
+    public ControladorMenuAdministrador(@Autowired ConexionNavegador conexionNavegador) {
+        this.conexionNavegador = conexionNavegador;
+    }
+
+    @GetMapping(value = "/registrarSSE", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter registrarSSE() {
+        conexionNavegador.conectarSSE();
+        return conexionNavegador.getConexionSSE(); 
+    }
 
     @GetMapping("vistaConectadaAdministrador")
     public List<Respuesta> iniciarVista(@SessionAttribute(name = "sesion", required = false) Sesion sesion) {
         if(sesion == null){
             return Respuesta.lista(new Respuesta("usuarioNoAutenticado", "index.html"));
         }
+
+        personaObs = (Administrador) sesion.getPersona();
+        personaObs.agregar(this);
 
         List<Puesto> puestos = Fachada.getInstancia().getPuestos();
         List<PuestoDTO> puestosDTO = PuestoDTO.fromList(puestos);
@@ -62,21 +80,14 @@ public class ControladorMenuAdministrador {
         if(sesion == null){
             return Respuesta.lista(new Respuesta("usuarioNoAutenticado", "index.html"));
         }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime fechaHora = LocalDateTime.parse(fecha, formatter);
 
-        Transito transito = Fachada.getInstancia().emularTransitoInicial(puesto, matricula, fechaHora);
-
-        Map<String, Object> transitoData = new HashMap<>();
-        transitoData.put("nombrePropietario", transito.getPropietario().getNombre());
-        transitoData.put("categoria", transito.getVehiculo().getCategoriaDeVehiculo().getNombre().name());
-        transitoData.put("bonificacion", transito.getBonificacionAplicada() != null ? 
-        transito.getBonificacionAplicada().getClass().getSimpleName() : "Ninguna");
-        transitoData.put("costoTransito", transito.getMontoCobrado());
-        transitoData.put("saldoDespues", transito.getPropietario().getSaldoActual());
+        TransitoAdminDTO transitoAdminDTO = Fachada.getInstancia().emularTransitoDTO(puesto, matricula, fechaHora);
 
         return Respuesta.lista(
-            new Respuesta("resultadoEmulacion", transitoData)
+            new Respuesta("resultadoEmulacion", transitoAdminDTO)
         );
     }
 
@@ -170,6 +181,15 @@ public class ControladorMenuAdministrador {
             new Respuesta("bonificacionAsignada", "Bonificación asignada exitosamente"),
             new Respuesta("propietarioEncontrado", propietarioDTO)
         );
+    }
+
+    @Override
+    public void actualizar(Object evento, Observable origen) {
+        if (evento.equals(Fachada.Eventos.borrarNotificaciones)) {
+            conexionNavegador.enviarJSON(Respuesta.lista(new Respuesta("notificaciones", null)));  
+        } else if (evento.equals(Fachada.Eventos.emularTransito)) {
+            
+        }
     }
     
 }

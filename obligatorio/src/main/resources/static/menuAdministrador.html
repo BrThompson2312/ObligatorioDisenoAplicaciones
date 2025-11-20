@@ -166,6 +166,7 @@
 
     <script>
         urlIniciarVista="/menuAdministrador/vistaConectadaAdministrador";
+        urlRegistroSSE = "/menuAdministrador/registrarSSE";
 
         const datosRecibidos = {
             puestos: null,
@@ -612,43 +613,122 @@
         }
 
         function mostrar_resultadoEmulacion(datos) {
+            console.log("🔍 ====== INICIO mostrar_resultadoEmulacion ======");
+            console.log("📦 Datos recibidos:", datos);
+            console.log("📦 Tipo:", typeof datos);
+            console.log("📦 Keys:", datos ? Object.keys(datos) : 'null');
+            
             const contenedor = document.getElementById('resultadoEmulacion');
             
+            if (!contenedor) {
+                console.error("❌ No se encontró el contenedor");
+                return;
+            }
+            
             if (!datos) {
+                console.error("❌ Datos vacíos");
                 contenedor.innerHTML = '<p class="error">No se recibieron datos del tránsito</p>';
                 return;
             }
             
-            contenedor.innerHTML = `
-                <div class="resultado-exito">
-                    <h3>✓ Tránsito Registrado Exitosamente</h3>
-                    <div class="resultado-detalles">
-                        <div class="resultado-item">
-                            <strong>Propietario:</strong> ${datos.nombrePropietario}
-                        </div>
-                        <div class="resultado-item">
-                            <strong>Categoría:</strong> ${datos.categoria}
-                        </div>
-                        <div class="resultado-item">
-                            <strong>Bonificación:</strong> ${datos.bonificacion}
-                        </div>
-                        <div class="resultado-item">
-                            <strong>Costo del Tránsito:</strong> $${datos.costoTransito.toFixed(2)}
-                        </div>
-                        <div class="resultado-item">
-                            <strong>Saldo Después:</strong> $${datos.saldoDespues.toFixed(2)}
+            // Log detallado de cada campo
+            console.log("📋 Campos individuales:");
+            console.log("  nombrePropietario:", datos.nombrePropietario, typeof datos.nombrePropietario);
+            console.log("  ciPropietario:", datos.ciPropietario, typeof datos.ciPropietario);
+            console.log("  matriculaVehiculo:", datos.matriculaVehiculo, typeof datos.matriculaVehiculo);
+            console.log("  categoria:", datos.categoria, typeof datos.categoria);
+            console.log("  nombrePuesto:", datos.nombrePuesto, typeof datos.nombrePuesto);
+            console.log("  bonificacion:", datos.bonificacion, typeof datos.bonificacion);
+            console.log("  montoCobrado:", datos.montoCobrado, typeof datos.montoCobrado);
+            console.log("  saldoDespues:", datos.saldoDespues, typeof datos.saldoDespues);
+            
+            // Extraer y validar valores
+            const nombrePropietario = datos.nombrePropietario || 'N/A';
+            const ciPropietario = datos.ciPropietario || 'N/A';
+            const matriculaVehiculo = datos.matriculaVehiculo || 'N/A';
+            const categoria = datos.categoria || 'N/A';
+            const nombrePuesto = datos.nombrePuesto || 'N/A';
+            const bonificacion = datos.bonificacion || 'Ninguna';
+            
+            // Validar números - CRÍTICO
+            let montoCobrado = 0;
+            let saldoDespues = 0;
+            
+            try {
+                if (datos.montoCobrado !== undefined && datos.montoCobrado !== null) {
+                    montoCobrado = Number(datos.montoCobrado);
+                    console.log("✅ montoCobrado convertido:", montoCobrado);
+                } else {
+                    console.warn("⚠️ montoCobrado no definido");
+                }
+                
+                if (datos.saldoDespues !== undefined && datos.saldoDespues !== null) {
+                    saldoDespues = Number(datos.saldoDespues);
+                    console.log("✅ saldoDespues convertido:", saldoDespues);
+                } else {
+                    console.warn("⚠️ saldoDespues no definido");
+                }
+            } catch (error) {
+                console.error("❌ Error al convertir números:", error);
+            }
+            
+            console.log("💰 Valores finales:");
+            console.log("  montoCobrado:", montoCobrado);
+            console.log("  saldoDespues:", saldoDespues);
+            
+            try {
+                contenedor.innerHTML = `
+                    <div class="resultado-exito">
+                        <h3>✓ Tránsito Registrado Exitosamente</h3>
+                        <div class="resultado-detalles">
+                            <div class="resultado-item">
+                                <strong>Propietario:</strong> ${nombrePropietario}
+                            </div>
+                            <div class="resultado-item">
+                                <strong>CI:</strong> ${ciPropietario}
+                            </div>
+                            <div class="resultado-item">
+                                <strong>Matrícula:</strong> ${matriculaVehiculo}
+                            </div>
+                            <div class="resultado-item">
+                                <strong>Categoría:</strong> ${categoria}
+                            </div>
+                            <div class="resultado-item">
+                                <strong>Puesto:</strong> ${nombrePuesto}
+                            </div>
+                            <div class="resultado-item">
+                                <strong>Bonificación:</strong> ${bonificacion}
+                            </div>
+                            <div class="resultado-item">
+                                <strong>Monto Cobrado:</strong> $${montoCobrado.toFixed(2)}
+                            </div>
+                            <div class="resultado-item">
+                                <strong>Saldo Después:</strong> $${saldoDespues.toFixed(2)}
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
+                console.log("✅ HTML generado correctamente");
+            } catch (error) {
+                console.error("❌ Error al generar HTML:", error);
+                contenedor.innerHTML = `<p class="error">Error al mostrar resultado: ${error.message}</p>`;
+            }
             
-            document.getElementById('inputMatricula').value = '';
-            document.getElementById('inputFecha').value = '';
+            // Limpiar formulario
+            const inputMatricula = document.getElementById('inputMatricula');
+            const inputFecha = document.getElementById('inputFecha');
+            if (inputMatricula) inputMatricula.value = '';
+            if (inputFecha) inputFecha.value = '';
             
-            contenedor.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            // Scroll
+            try {
+                contenedor.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } catch (e) {
+                console.warn("No se pudo hacer scroll");
+            }
+            
+            console.log("✅ ====== FIN mostrar_resultadoEmulacion ======");
         }
-
-        
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log("=== DOM CARGADO ===");

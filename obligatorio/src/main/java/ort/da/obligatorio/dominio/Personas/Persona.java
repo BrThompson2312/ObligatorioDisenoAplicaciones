@@ -1,6 +1,7 @@
 package ort.da.obligatorio.dominio.Personas;
+import ort.da.obligatorio.observador.Observable;
 
-public abstract class Persona {
+public abstract class Persona extends Observable {
     
     private String ci;
     private String password;

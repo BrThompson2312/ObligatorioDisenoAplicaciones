@@ -15,6 +15,9 @@ public abstract class Observable {
     }
 
     protected void avisar(Object evento){
-        observadores.forEach(o->o.actualizar(this, evento));
+        ArrayList<Observador> copia = new ArrayList<>(observadores);
+        for(Observador obs:copia){
+            obs.actualizar(evento, this);
+        }
     }
 }
